@@ -1,13 +1,15 @@
 import React from "react";
-import { Row, Col, Alert } from "antd";
-import { Form, Input,Select,Icon, Button } from "antd";
+import { Row, Col } from "antd";
+import { Form, Input,Select,Icon, message,Button } from "antd";
 import axios from 'axios';
 import validator from 'email-validator';
-import { CountryDropdown, RegionDropdown, CountryRegionData } from 'react-country-region-selector';
+import { CountryRegionData } from 'react-country-region-selector';
 import "./auth.css";
+import { withRouter } from "react-router-dom";
 
 const serverUrl = "http://localhost:3001/";
 const { Option } = Select;
+
 class Registernext extends React.Component {
   constructor(props) {
     super(props);
@@ -51,30 +53,45 @@ class Registernext extends React.Component {
       }
       countryRegion.unshift({country:country,regions:region});
     }
-    this.setState({countryData:countryRegion});
+    this.setState({countryData:countryRegion.reverse()});
   }
 
-  emailGetandCheck = event => {
+  emailGetandCheck = (event) => {
     let ename = event.target.value;
     if (ename === "") {
       this.setState({
         emailCheck: "warning",
-        emailhelp: "Enter your email"
       });
       return;
     }
-    if (!validator.validate(event.target.value)) {
+    if (!validator.validate(ename)) {
       this.setState({
         emailCheck: "error",
-        emailhelp: "Incorrect Email Format"
+        emailHelp:""
       });
-    } else {
-      this.setState({
-        email:ename,
-        emailCheck: "success",
-        emailhelp: ""
-      });
+      return;
     }
+    axios.get(`${serverUrl}auth/checkEmail?email=${ename}`)
+        .then((response) => {
+          if (response.data) {
+            this.setState({ emailHelp: "", email :ename},()=>{
+              this.setState({ emailCheck: "success", });
+            });
+          }
+          else {
+            this.setState({
+              email:"",
+              emailCheck: "error",
+            });          
+          }
+        })
+        .catch((error) => {
+          this.setState({
+            emailCheck: "warning",
+            emailHelp: "Server Down!. Please try again later. Very sorry for Inconvinency."
+          });
+      })
+    
   };
 
   selectCountry=(event)=> {
@@ -134,7 +151,14 @@ class Registernext extends React.Component {
         region:this.state.region
       })
         .then((response)=> {
-          console.log(response.data);
+          if(response.data)
+          {
+            localStorage.setItem("uname", this.props.username);
+            this.props.history.push(`/profile/${this.props.username}`);
+          }
+          else{
+            message.warning('Server Down. Please try again later.');
+          }
         })
     }
   }
@@ -216,7 +240,8 @@ class Registernext extends React.Component {
                 xs
                 style={{ fontSize: "1.45vh" }}
               >
-               <span className="text-info font-weight-normal">Note: </span> Please Provide Correct Details. It's For you own Account's Security.
+               <span className="text-info font-weight-normal">Note: </span> 
+               Please Provide Correct Details. It's for you own Account's Security.
               </Col>
             </Row>
 
@@ -239,4 +264,4 @@ class Registernext extends React.Component {
   }
 }
 
-export default Registernext;
+export default withRouter(Registernext);

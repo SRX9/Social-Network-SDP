@@ -1,9 +1,8 @@
 import React from 'react';
-import {BrowserRouter as Router,Switch,Route} from 'react-router-dom';
+import {BrowserRouter as Router,Switch,Route,withRouter} from 'react-router-dom';
 import Login from './Components/Auth/Login';
 import Register from './Components/Auth/Register';
-import Loginnext from './Components/Auth/Loginnext';
-import Registernext from './Components/Auth/Registernext'
+import Profile from './Components/UserProfile/Profile';
 import "antd/dist/antd.css";
 import './App.css';
 
@@ -12,22 +11,13 @@ function App() {
     <Router>
       <div className="">
         <Switch>
-          <Route path="/SignIn" exact component={() => <Login />}></Route>
+          <Route path="/signin" exact component={() => <Login />}></Route>
           <Route
-            path="/SignInplus"
-            exact
-            component={() => <Loginnext />}
-          ></Route>
-          <Route
-            path="/CreateAccount"
+            path="/createaccount"
             exact
             component={() => <Register />}
           ></Route>
-          <Route
-            path="/CreateAccountplus"
-            exact
-            component={() => <Registernext />}
-          ></Route>
+          <Route path="/profile/:username" render={(props) => <Profile {...props} />}></Route>
         </Switch>
       </div>
       <div className="text-center bg-light p-4 border fixed-bottom">

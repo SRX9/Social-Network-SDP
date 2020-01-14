@@ -2,9 +2,10 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require('mongoose');
 const rn = require("random-number");
-const {emailWelcomeGreet} =require('./Utilities');
+const { emailWelcomeGreet,emailOrName } =require('./Utilities');
+const { unameTree,emailTree }=require('./Trees');
 const bcrypt = require('bcryptjs');
-const  AVLTree = require("binary-search-tree").AVLTree;
+
 
 //moongoose setup
 mongoose.Promise = global.Promise;
@@ -12,6 +13,8 @@ mongoose.connect('mongodb://127.0.0.1:27017/ayefan', {
   useCreateIndex: true,
   useNewUrlParser: true
 });
+
+
 //mongod --dbpath C:\Users\SRx\Desktop\Database
 //Database models
 const {
@@ -19,16 +22,30 @@ const {
 } = require("./Models");
 
 
+//trees initializers
+UserModel.find({},"username email",(err,doc)=>{
+
+  for(var i=0;i<doc.length;i++)
+  {
+    unameTree.insert(doc[i].username);
+    emailTree.insert(doc[i].email);
+  }
+
+});
 //AVL TREE FOR EMAIL AND USERNAME
-let avlTree = new AVLTree();
-avlTree.insert("raj");
-avlTree.insert("rinku");
-avlTree.insert("lolo");
+
 //////////**********Login************/////////////
 
 //////////**********Register************/////////////
 router.get('/checkUsername',(req,res)=>{
-  if (avlTree.search(req.query.username).length===0) {
+  if (unameTree.search(req.query.username).length===0) {
+    res.send(true);
+  } else {
+    res.send(false);
+  }
+});
+router.get('/checkEmail', (req, res) => {
+  if (emailTree.search(req.query.email).length === 0) {
     res.send(true);
   } else {
     res.send(false);
@@ -68,14 +85,53 @@ router.post('/registerOne',(req,res)=>{
           });
 
           newUser.save().then((data) => {
-            avlTree.insert(username);
-            res.send({ state: true, data: data });
+            unameTree.insert(username);
+            emailTree.insert(email);
+            res.send({ state: true });
           }, (e) => {
             console.log(e);
             res.send(false);
           });
         });
   });
+});
+
+router.get('/signinCheck',(req,res)=>{
+  
+  if (emailOrName(req.query.identifier))
+  {
+    if (emailTree.search(req.query.identifier).length === 0) {
+      res.send(false);
+    } else {
+      res.send(true);
+    }
+  }
+  else{
+    if (unameTree.search(req.query.identifier).length === 0) {
+      res.send(false);
+    } else {
+      res.send(true);
+    }
+  }
+});
+
+router.post('/signin',(req,res)=>{
+  console.log(req.body.username);
+     UserModel.findOne({ username: req.body.username }, 'password ', function (err, docs) {
+        if (err === null) {
+          bcrypt.compare(req.body.password, docs.password, function (err, response) {
+            if (response) {
+              res.send(true);
+            }
+            else {
+              res.send(false);
+            }
+          });
+        }
+        else {
+          res.send(false);
+        }
+      })
 });
 
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link,withRouter } from "react-router-dom";
 import { Row, Col } from "antd";
 import { Form, Input, Button,Icon } from "antd";
 import { Helmet } from "react-helmet";
@@ -33,7 +33,7 @@ class Register extends React.Component {
   }
 
   checkAndGetUsername= async (event)=>{
-    let uname=event.target.value;
+    let uname = event.target.value.replace(/\s/g, '');
     if(uname==="")
     {
       this.setState({Username:"",valuser:"", usernameCheck: "warning", userHelp: "Enter a Username" });
@@ -96,7 +96,7 @@ class Register extends React.Component {
       <div style={{ overflow: "hidden" }}>
         <Helmet>
           <meta
-            name="AyeFan Register"
+            name="AyeFan SignUp"
             content="AyeFan Create Account"
             charSet="utf-8"
           />
@@ -146,7 +146,7 @@ class Register extends React.Component {
                     validateStatus={this.state.usernameCheck}
                   >
                     <Input
-                      value={this.state.valuser.toLocaleLowerCase()}
+                      value={this.state.valuser.toLocaleLowerCase().replace(/\s/g, '')}
                       size="default"
                       style={{textTransform:"lowercase"}}
                       onChange={this.checkAndGetUsername}

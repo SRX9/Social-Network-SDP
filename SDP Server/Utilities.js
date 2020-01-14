@@ -5,7 +5,7 @@ emailWelcomeGreet=async (email)=>{
         service: "gmail",
         auth: {
             user: "aquasr9@gmail.com",
-            pass: ""
+            pass: "hanumanrajsrk1999@."
         }
     });
 
@@ -26,7 +26,11 @@ emailWelcomeGreet=async (email)=>{
         }
     });
 }
-
+emailOrName = (email) => {
+    var re = /\S+@\S+\.\S+/;
+    return re.test(email);
+}
 module.exports = {
-    emailWelcomeGreet:emailWelcomeGreet
+    emailWelcomeGreet:emailWelcomeGreet,
+    emailOrName:emailOrName
 }
