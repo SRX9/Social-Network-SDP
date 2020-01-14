@@ -1,0 +1,32 @@
+const nodemailer = require('nodemailer');
+emailWelcomeGreet=async (email)=>{
+
+    var transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            user: "aquasr9@gmail.com",
+            pass: ""
+        }
+    });
+
+    var mailOptions = {
+        from: "aquasr9@gmail.com",
+        to: email,
+        subject: "Welcome to AyeFan",
+        text: "A very Warm Welcome to AyeFan",
+        html:"<h1>Welcome To AyeFan</h1>"
+    };
+
+    await transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+            console.log(error,"adsasdasd");
+            return false;
+        } else {
+            return true;
+        }
+    });
+}
+
+module.exports = {
+    emailWelcomeGreet:emailWelcomeGreet
+}

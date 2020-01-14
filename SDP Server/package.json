@@ -10,10 +10,13 @@
   "author": "srx",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "binary-search-tree": "^0.2.6",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "mongoose": "^5.8.3",
+    "install": "^0.13.0",
+    "mongoose": "^5.8.7",
     "nodemailer": "^6.4.2",
     "random-number": "0.0.9"
   },

@@ -2,11 +2,11 @@ const mongoose = require("mongoose");
 const subArraySchema = mongoose.Schema({}, { _id: false });
 
 const networkFanins=mongoose.Schema({
-  {
     userid:mongoose.Types.ObjectId,
     username:String,
+    fullname:String,
+    verify:Boolean,
     avatar:String,
-  }
 }, { _id: false });
 
 let UserModel = mongoose.model("user", {
@@ -16,11 +16,13 @@ let UserModel = mongoose.model("user", {
     required: true,
     type: String
   },
+  password:String,
   inboxid: mongoose.Types.ObjectId,
   fullname: String,
   email: String,
   intro: String,
   country: String,
+  region:String,
   state: String,
   fans: Number,
   creationTime: Date,
@@ -80,7 +82,7 @@ let GroupChats = mongoose.model("groupchat", {
 
 let PostModel=mongoose.model('post',{
     
-    posterid=mongoose.Types.ObjectId,
+    posterid:mongoose.Types.ObjectId,
     postername:String,
     avatar:String,
     time:Date,

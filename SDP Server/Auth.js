@@ -1,57 +1,82 @@
 const express = require("express");
 const router = express.Router();
-const nodemailer = require('nodemailer');
-var rn = require("random-number");
+const mongoose = require('mongoose');
+const rn = require("random-number");
+const {emailWelcomeGreet} =require('./Utilities');
+const bcrypt = require('bcryptjs');
+const  AVLTree = require("binary-search-tree").AVLTree;
 
-router.post('/login',(req,res)=>{
+//moongoose setup
+mongoose.Promise = global.Promise;
+mongoose.connect('mongodb://127.0.0.1:27017/ayefan', {
+  useCreateIndex: true,
+  useNewUrlParser: true
+});
+//mongod --dbpath C:\Users\SRx\Desktop\Database
+//Database models
+const {
+      UserModel,GroupModel,UserInbox,GroupInbox,GroupChats,PostModel,ReactionsModel,UserActionsModel,UserNetworkModel,UserTogroupModel
+} = require("./Models");
 
-    res.send({
-        usr:"lola"
-    });
 
+//AVL TREE FOR EMAIL AND USERNAME
+let avlTree = new AVLTree();
+avlTree.insert("raj");
+avlTree.insert("rinku");
+avlTree.insert("lolo");
+//////////**********Login************/////////////
+
+//////////**********Register************/////////////
+router.get('/checkUsername',(req,res)=>{
+  if (avlTree.search(req.query.username).length===0) {
+    res.send(true);
+  } else {
+    res.send(false);
+  }
 });
 
-router.get('/register',(req,res)=>{
+router.post('/registerOne',(req,res)=>{
+  const username = req.body.username;
+  const password = req.body.password;
+  const fullname = req.body.fullname;
+  const country = req.body.country;
+  const region = req.body.region;
+  const email=req.body.email;
+  emailWelcomeGreet(email);
+  bcrypt.genSalt(10, function (err, salt) {
+        bcrypt.hash(password, salt, function (err, hash) {
+          let newUser = new UserModel({
+            username: username,
+            password: hash,
+            fullname: fullname,
+            email: email,
+            intro: "",
+            country: country,
+            region: region,
+            state: "",
+            fans: 0,
+            creationTime: new Date(),
+            fanins: 0,
+            group: [],
+            NoPost: 0,
+            avatar: "",
+            coverphotoview: true,
+            coverPhoto: "",
+            coverVideo: "",
+            story: "",
+            blocked: []
+          });
 
-    const username=req.body.username;
-    const password=req.body.password;
-    const email=req.body.password;
-    const fullname=req.body.password;
-    const country=req.body.country;
-    //'https://ipapi.co/json/'
-
-    var transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: "aquasr9@gmail.com",
-        pass: "hanumanrajsrk1999@."
-      }
-    });
-
-    //token and message generator
-    var options = {
-      min: 999999,
-      max: 9999999,
-      integer: true
-    };
-
-    const token=rn(options);
-    const message="";
-
-    var mailOptions = {
-      from: "aquasr9@gmail.com",
-      to: "blogphins@outlook.com",
-      subject: "Sending Email using Node.js",
-      text: "That was easy!"
-    };
-
-    transporter.sendMail(mailOptions, function(error, info) {
-      if (error) {
-        console.log(error);
-      } else {
-        console.log("Email sent: " + info.response);
-      }
-    });
+          newUser.save().then((data) => {
+            avlTree.insert(username);
+            res.send({ state: true, data: data });
+          }, (e) => {
+            console.log(e);
+            res.send(false);
+          });
+        });
+  });
 });
+
 
 module.exports = router;
