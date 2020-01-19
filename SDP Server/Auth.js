@@ -32,9 +32,7 @@ UserModel.find({},"username email",(err,doc)=>{
   }
 
 });
-//AVL TREE FOR EMAIL AND USERNAME
 
-//////////**********Login************/////////////
 
 //////////**********Register************/////////////
 router.get('/checkUsername',(req,res)=>{
@@ -96,6 +94,7 @@ router.post('/registerOne',(req,res)=>{
   });
 });
 
+//////////**********Login************/////////////
 router.get('/signinCheck',(req,res)=>{
   
   if (emailOrName(req.query.identifier))
@@ -116,22 +115,32 @@ router.get('/signinCheck',(req,res)=>{
 });
 
 router.post('/signin',(req,res)=>{
-  console.log(req.body.username);
-     UserModel.findOne({ username: req.body.username }, 'password ', function (err, docs) {
-        if (err === null) {
-          bcrypt.compare(req.body.password, docs.password, function (err, response) {
-            if (response) {
-              res.send(true);
-            }
-            else {
-              res.send(false);
-            }
-          });
-        }
-        else {
-          res.send(false);
-        }
-      })
+  if(emailOrName(req.body.username))
+  {
+    UserModel.findOne({ email: req.body.username }, 'password username', function (err, docs) {
+      if (err === null) {
+        bcrypt.compare(req.body.password, docs.password, function (err, response) {
+          res.send({state:response,token:docs.username});
+        });
+      }
+      else {
+        res.send(false);
+      }
+    })
+  }
+  else{
+    UserModel.findOne({ username: req.body.username }, 'password username', function (err, docs) {
+      if (err === null) {
+        bcrypt.compare(req.body.password, docs.password, function (err, response) {
+          res.send({ state: response, token: docs.username });
+        });
+      }
+      else {
+        res.send(false);
+      }
+    })
+  }
+
 });
 
 

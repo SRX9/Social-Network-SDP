@@ -34,6 +34,9 @@ let UserModel = mongoose.model("user", {
   coverPhoto: String,
   coverVideo: String,
   story: String,
+  stalker:Number,
+  search:Number,
+  monstreams:Number,
   blocked:[subArraySchema]
 });
 
@@ -82,8 +85,8 @@ let GroupChats = mongoose.model("groupchat", {
 
 let PostModel=mongoose.model('post',{
     
-    posterid:mongoose.Types.ObjectId,
-    postername:String,
+    postid:mongoose.Types.ObjectId,
+    username:String,
     avatar:String,
     time:Date,
     text:{
@@ -105,7 +108,7 @@ let ReactionsModel=mongoose.model('reaction',{
     text:String,
     reaction:String,
     reply:[subArraySchema],
-    like:Number
+    like:[subArraySchema]
 });
 
 let UserActionsModel=mongoose.model('useraction',{

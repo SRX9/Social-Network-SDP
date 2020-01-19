@@ -15,6 +15,11 @@
   }
 }
 
+body{
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
 .fan{
   font-weight: 600;
   color: rgb(14, 138, 221);
@@ -27,5 +32,43 @@
 
 
 .myblue{
-  color: rgb(2, 104, 187);
+  color: rgb(19, 139, 236);
 }
+
+ @keyframes loader-animation {
+     0% {
+         left: -100%;
+     }
+     49% {
+         left: 100%;
+     }
+     50% {
+         left: 100%;
+     }
+     100% {
+         left: -100%;
+     }
+ }
+
+.bar {
+     position: relative;
+     height: 5px;
+     background-color: dodgerblue;
+     animation-name: loader-animation;
+     animation-duration: 1.5s;
+     animation-iteration-count: infinite;
+     animation-timing-function: ease-in-out;
+ }
+
+ .barno{
+        position: relative;
+     height: 5px;
+ }
+
+ .br{
+     border-radius: 13px;
+ }
+
+ .shad{
+     box-shadow: 0px 2px 5px 0px rgb(195, 195, 195);
+ }

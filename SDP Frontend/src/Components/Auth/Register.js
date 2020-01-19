@@ -1,5 +1,5 @@
 import React from "react";
-import { Link,withRouter } from "react-router-dom";
+import { Link} from "react-router-dom";
 import { Row, Col } from "antd";
 import { Form, Input, Button,Icon } from "antd";
 import { Helmet } from "react-helmet";
@@ -208,7 +208,10 @@ class Register extends React.Component {
                 </Form>
               </div>
             ) : (
-              <Registernext username={this.state.Username} 
+              <Registernext 
+                  loadOn={this.props.loadOn}
+                  loadOff={this.props.loadOff}
+                  username={this.state.Username} 
                   password={this.state.password}
                   fullname={this.state.fullname} />
             )}

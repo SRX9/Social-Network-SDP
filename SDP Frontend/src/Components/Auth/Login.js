@@ -1,5 +1,5 @@
 import React from "react";
-import {Link,withRouter} from 'react-router-dom';
+import {Link,} from 'react-router-dom';
 import { Row, Col } from "antd";
 import { Form,Icon, Input,Button} from 'antd';
 import { Helmet } from "react-helmet";
@@ -32,10 +32,12 @@ class Login extends React.Component
           .then((response) => {
             if(response.data)
             {
+
               this.setState({ next: true, identifierCheck: "success" });
             }
             else{
-              this.setState({ identifierCheck: "error", identifierHelp: "Invalid Credentials" })
+              this.setState({ identifierCheck: "error", identifierHelp: "Invalid Credentials" });
+
             }
 
           }).catch(error=>{
@@ -85,7 +87,10 @@ class Login extends React.Component
                 </p>
                
                   {this.state.next?
-                    <Loginnext username={this.state.identifier}/>
+                    <Loginnext 
+                    loadOn={this.props.loadOn}
+                    loadOff={this.props.loadOff}
+                    username={this.state.identifier}/>
                     :  
                   <Form className="text-left mb-3 p-2">
                     <Form.Item

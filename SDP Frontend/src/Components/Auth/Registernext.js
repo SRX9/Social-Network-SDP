@@ -142,24 +142,28 @@ class Registernext extends React.Component {
     }
     if(allright)
     {
-      axios.post(`${serverUrl}auth/registerOne`, {
-        username:this.props.username,
-        fullname:this.props.fullname,
-        password:this.props.password,
-        email:this.state.email,
-        country:this.state.country,
-        region:this.state.region
-      })
-        .then((response)=> {
-          if(response.data)
-          {
-            localStorage.setItem("uname", this.props.username);
-            this.props.history.push(`/profile/${this.props.username}`);
-          }
-          else{
-            message.warning('Server Down. Please try again later.');
-          }
+      this.setState({loading:true},()=>{
+        axios.post(`${serverUrl}auth/registerOne`, {
+          username: this.props.username,
+          fullname: this.props.fullname,
+          password: this.props.password,
+          email: this.state.email,
+          country: this.state.country,
+          region: this.state.region
         })
+          .then((response) => {
+            this.setState({ loading: false });
+            if (response.data) {
+              localStorage.setItem("uname", this.props.username);
+              this.props.history.push(`/profile/${this.props.username}`);
+            }
+            else {
+              this.setState({ loading: false });
+              message.warning('Server Down. Please try again later.');
+            }
+          })
+      })
+
     }
   }
 
@@ -248,6 +252,7 @@ class Registernext extends React.Component {
             <Row className="pt-2">
               <Col xs>
                 <Button
+                loading={this.state.loading}
                   size="default"
                   onClick={this.CreateAccount}
                   className="w-100"

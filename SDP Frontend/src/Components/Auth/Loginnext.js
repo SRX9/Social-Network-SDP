@@ -1,6 +1,6 @@
 import React from "react";
 import {withRouter} from 'react-router-dom';
-import { Form, Input,Icon, Button ,Row, Col} from 'antd';
+import { Form,message, Input,Icon, Button ,Row, Col} from 'antd';
 import axios from 'axios';
 import "antd/dist/antd.css";
 
@@ -19,19 +19,25 @@ class Loginnext extends React.Component {
   }
 
   Signin=()=>{
-    axios.post(`${serverUrl}auth/signin`, {
-      username: this.props.username,
-      password: this.state.password
-    }).then((response)=> {
-        if(response.data)
-        {
-          localStorage.setItem("uname",this.props.username);
-          this.props.history.push(`/profile/${this.props.username}`);
+    this.setState({loading:true},()=>{
+      axios.post(`${serverUrl}auth/signin`, {
+        username: this.props.username,
+        password: this.state.password
+      }).then((response) => {
+        this.setState({ loading: false });
+        if (response.data.state) {
+          localStorage.setItem("uname", this.props.username);
+          this.props.history.push(`/profile/${response.data.token}`);
         }
-        else{
-          this.setState({passwordCheck:"error",passwordHelp:"Incorrect Password"});
+        else {
+          this.setState({ passwordCheck: "error", passwordHelp: "Incorrect Password" });
         }
+      }).catch((error) => {
+        this.setState({ loading: false });
+        message.warning('Server Down. Please try again later.');
       })
+    })
+
   }
 
   render() {
@@ -53,7 +59,7 @@ class Loginnext extends React.Component {
           </Form.Item>
           <Row className="pl-3 pr-3">
             <Col xs>
-              <Button size="default" onClick={this.Signin} className="w-100" type="primary">
+              <Button size="default" loading={this.state.loading} onClick={this.Signin} className="w-100" type="primary">
                 Sign In
               </Button>
             </Col>

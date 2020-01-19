@@ -7,15 +7,15 @@ const port = process.env.PORT || 3001;
 //file routes
 
 /* authentication routes */
-var routes= require('./Auth.js');
-
+var Authroutes= require('./Auth.js');
+var DataFetchrouter=require('./DataFetch');
 
 //middlewares
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static(__dirname));
-app.use("/auth", routes);
-
+app.use("/auth", Authroutes);
+app.use("/data", DataFetchrouter);
 
 app.listen(port,()=>{
     console.log("it's live")
