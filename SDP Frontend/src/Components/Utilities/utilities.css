@@ -6,6 +6,15 @@
   overflow: hidden;
 }
 
+.thumbnail1 {
+  position: relative;
+  width: 100%;
+  max-width: 700px;
+  height: 300px;
+  margin-left: -70px;
+  overflow: hidden;
+}
+
 .textBot{
   transition: 0.5s;
   position: absolute;
@@ -27,7 +36,14 @@
   left:12px;
   color: white;
 }
-
+.text-block11 {
+  transition: 0.5s;
+  position: absolute;
+  bottom: 12px;
+  
+  color: white;
+  opacity: 1;
+}
 .text-block {
   transition: 0.5s;
   position: absolute;
@@ -36,6 +52,11 @@
   opacity: 0;
 }
 .faded:hover .text-block{
+    transition: 0.5s;
+
+  opacity: 1;
+}
+.faded:hover .text-block11{
     transition: 0.5s;
 
   opacity: 1;
@@ -65,7 +86,19 @@
       -ms-transform: translate(-50%,-50%);
           transform: translate(-50%,-50%);
 }
+.thumbnail1 img {
+      border-radius:10px;
 
+  position: absolute;
+  left: 50%;
+  
+  top: 50%;
+  height: 100%;
+  width: auto;
+  -webkit-transform: translate(-50%,-50%);
+      -ms-transform: translate(-50%,-50%);
+          transform: translate(-50%,-50%);
+}
 
 .rotate {
   animation: rotation 8s infinite linear;

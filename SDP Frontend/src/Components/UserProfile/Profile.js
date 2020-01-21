@@ -130,44 +130,13 @@ class Profile extends React.Component
                   }}
                 >
                   <div class="row justify-content-md-center">
-                    <div class="col col-lg-2 text-right pt-2">
-                      <div className=" text-right">
-                        <span
-                          className=" myblue"
-                          style={{ fontSize: "1.9rem", fontWeight: "600" }}
-                        >
-                          {this.state.userObj.username}
-                        </span>
-                      </div>
-                      <div className=" text-right">
-                        <span
-                          className="gry"
-                          style={{ fontSize: "1rem", fontWeight: "500" }}
-                        >
-                          {this.state.userObj.fullname}
-                        </span>
-                      </div>
-                    </div>
-                    <div class="col-md-auto">
-                      <Avatar
-                        className="text-center"
-                        style={{
-                          border: "10px solid white",
-                          height: "250px",
-                          width: "250px",
-                          top: "-150px"
-                        }}
-                        size="large"
-                        src={this.state.userObj.avatar}
-                      />
-                    </div>
                     <div
-                      class="col col-lg-2 text-left"
+                      class="col col-lg-2 text-right"
                       style={{ paddingTop: "7px" }}
                     >
-                      <div className="w-50 text-center">
+                      <div className="w-50 float-right" style={{marginRight:"-45px"}}>
                         <div
-                          className="cur pb-1"
+                          className="cur pb-1 text-center"
                           style={{
                             fontSize: "1.5rem",
                             fontWeight: "500",
@@ -188,9 +157,41 @@ class Profile extends React.Component
                         </Button>
                       </div>
                     </div>
+                    <div class="col-md-auto">
+                      <Avatar
+                        className="text-center"
+                        style={{
+                          border: "10px solid white",
+                          height: "250px",
+                          width: "250px",
+                          top: "-150px"
+                        }}
+                        size="large"
+                        src={this.state.userObj.avatar}
+                      />
+                    </div>
+                    <div class="col col-lg-2  pt-2" style={{ marginLeft: "-35px" }}>
+                      <div className=" text-left" >
+                        <span
+                          className=" myblue"
+                          style={{ fontSize: "1.9rem", fontWeight: "600" }}
+                        >
+                          @{this.state.userObj.username}
+                        </span>
+                      </div>
+                      <div className=" text-left" style={{ marginLeft: "-20px" }}>
+                        <span
+                          className="gry"
+                          style={{ fontSize: "1rem", fontWeight: "500" }}
+                        >
+                          {this.state.userObj.fullname}
+                        </span>
+                      </div>
+                    </div>
+
                   </div>
                 </div>
-                <div style={{ marginTop: "105px", paddingBottom: "50px" }}>
+                <div className="sticky-top fixed-top" style={{ marginTop: "105px", paddingBottom: "50px" }}>
                   <Tabs
                     size="large"
                     defaultActiveKey="1"
@@ -203,7 +204,7 @@ class Profile extends React.Component
                       <Posts userid={this.state.userObj._id} />
                     </TabPane>
                     <TabPane tab="Inbox" key="3">
-                      <Posts userid={this.state.userObj._id} />
+                      <Inbox obj={this.state.userObj} />
                     </TabPane>
                     <TabPane tab="Story" key="4">
                       <Story story={this.state.userObj.story} />
