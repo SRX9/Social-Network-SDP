@@ -27,23 +27,47 @@ class Profile extends React.Component
 
     componentWillMount()
     {
+      if (localStorage.getItem("!@#$") !== undefined) {
         this.props.loadOn();
         axios.get(`${serverUrl}data/getUserProfile?username=${this.props.match.params.username}`)
-            .then((response) => {
-                this.props.loadOff();
-                if (response.data !==false) {
-                    this.setState({ loading:false, userObj:response.data},()=>{
-                    });
-                }
-                else {
-                    this.setState({ exist:false });
-                }
-            }).catch(error => {
-                this.props.loadOff();
-                this.setState({errorFlag:true, error: "Server Down! Please try again later. We are sorry for inconvinency." })
-            });
-    }
+          .then((response) => {
+            this.props.loadOff();
+            if (response.data !== false) {
+              this.setState({ loading: false, userObj: response.data }, () => {
+              });
+            }
+            else {
+              this.setState({ exist: false });
+            }
+          }).catch(error => {
+            this.props.loadOff();
+            this.setState({ errorFlag: true, error: "Server Down! Please try again later. We are sorry for inconvinency." })
+          });
+      }
+      else {
+        this.props.history.push(`/signin`);
+      }
 
+    }
+    componentDidUpdate = (prevProps) => {
+      if (this.props.match.params.username !== prevProps.match.params.username) {
+        this.props.loadOn();
+        axios.get(`${serverUrl}data/getUserProfile?username=${this.props.match.params.username}`)
+          .then((response) => {
+            this.props.loadOff();
+            if (response.data !== false) {
+              this.setState({ loading: false, userObj: response.data }, () => {
+              });
+            }
+            else {
+              this.setState({ exist: false });
+            }
+          }).catch(error => {
+            this.props.loadOff();
+            this.setState({ errorFlag: true, error: "Server Down! Please try again later. We are sorry for inconvinency." })
+          });
+      };
+    }
     render()
     {
         if(this.state.loading)
@@ -56,7 +80,7 @@ class Profile extends React.Component
         }
         else{
             return (
-              <div>
+              <div className="style-1">
                 <div
                   className="layer"
                   style={{
@@ -77,13 +101,12 @@ class Profile extends React.Component
                                 style={{
                                   fontSize: "2rem",
                                   fontWeight: "500",
-                                  textShadow: "1px 1px 1px #000000"
                                 }}
-                                className="aye text-white"
+                                className="aye "
                               >
                                 A
                                 <span
-                                  style={{ textShadow: "1px 1px 1px white" }}
+                                  style={{ }}
                                   className="fan "
                                 >
                                   F
@@ -129,10 +152,8 @@ class Profile extends React.Component
                     width: "100%"
                   }}
                 >
-                  <div class="row justify-content-md-center">
-                    <div
-                      class="col col-lg-2 text-right"
-                      style={{ paddingTop: "7px" }}
+                  <div class="row justify-content-md-center" style={{marginLeft:"-48px"}}>
+                    <div class="col col-lg-2 text-right" style={{ paddingTop: "7px" }}
                     >
                       <div className="w-50 float-right" style={{marginRight:"-45px"}}>
                         <div
@@ -188,7 +209,6 @@ class Profile extends React.Component
                         </span>
                       </div>
                     </div>
-
                   </div>
                 </div>
                 <div className="sticky-top fixed-top" style={{ marginTop: "105px", paddingBottom: "50px" }}>

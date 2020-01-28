@@ -17,7 +17,7 @@ class Loginnext extends React.Component {
       passwordHelp:""
     }
   }
-
+  //iden ==!@#$
   Signin=()=>{
     this.setState({loading:true},()=>{
       axios.post(`${serverUrl}auth/signin`, {
@@ -26,7 +26,9 @@ class Loginnext extends React.Component {
       }).then((response) => {
         this.setState({ loading: false });
         if (response.data.state) {
-          localStorage.setItem("uname", this.props.username);
+          localStorage.setItem("!@#$", this.props.username);
+          this.props.successCreate();
+
           this.props.history.push(`/profile/${response.data.token}`);
         }
         else {

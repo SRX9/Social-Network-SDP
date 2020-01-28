@@ -21,7 +21,7 @@ class Posts extends React.Component {
               reactionsNo: 25468,
               type: 2,
               photo:
-                "https://www.nme.com/wp-content/uploads/2019/10/robert-downey-jr-dolittle-universal-pictures-youtube@2000x1270.jpg",
+                "https://www.screengeek.net/wp-content/uploads/2019/09/robert-downey-jr-iron-man-tony-stark.jpg",
               text:
                 "I becomame animal whisperer @dr. #Dolittle – watch the from &joerusso ‘Dolittle’ trailer",
               time: new Date(),
@@ -212,7 +212,7 @@ class Posts extends React.Component {
                   ]
                 }
               ]
-            }
+            },
           ]
         };
     }
@@ -221,11 +221,11 @@ class Posts extends React.Component {
     render() {
         return (
             <div>
-                <Row className="text-center pb-5 mb-5 br p-3" justify="center">
-                    <Col span={2}>
+                <Row className="text-center pb-5 mb-5  p-3" justify="center">
+                    <Col span={1}>
                     </Col>
-                    <Col span={20}>
-                        <Row gutter={[16, 16]}>
+                    <Col span={22}>
+                        <Row gutter={[16, 16]} className="border-0">
                             {this.state.posts.map(obj =>
                                 <Col span={6} >
                                     <OverPost obj={obj} />
@@ -233,7 +233,7 @@ class Posts extends React.Component {
                             )}
                         </Row>
                     </Col>
-                    <Col span={2}>
+                    <Col span={1}>
                     </Col>
                 </Row>
                 <Row>

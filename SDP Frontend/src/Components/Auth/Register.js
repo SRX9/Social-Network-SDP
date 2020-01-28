@@ -90,6 +90,11 @@ class Register extends React.Component {
       this.setState({next:true});
     }
   }
+  
+  successCreate=()=>{
+    this.props.setHomeUser();
+  }
+
 
   render() {
     return (
@@ -209,6 +214,7 @@ class Register extends React.Component {
               </div>
             ) : (
               <Registernext 
+                  successCreate={this.successCreate}
                   loadOn={this.props.loadOn}
                   loadOff={this.props.loadOff}
                   username={this.state.Username} 

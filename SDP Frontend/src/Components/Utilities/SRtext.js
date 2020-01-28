@@ -11,7 +11,7 @@ class SRtext extends React.Component
         super(props);
         this.state={
             plines: '',
-            height: '320px',
+            height: this.props.type==="reply"?'20px':'320px',
             caption: "",
             tags:[
                 {
@@ -72,6 +72,8 @@ class SRtext extends React.Component
             ]
         }
     }
+
+
 
     //taken Similars from server 
     renderTags=(token)=>{
@@ -147,7 +149,7 @@ class SRtext extends React.Component
             }   
         });
         if (String(e.target.value).length < 301) {
-            /*var nlines = (String(e.target.value).split("\n").length - 1);
+            var nlines = (String(e.target.value).split("\n").length - 1);
             if (nlines > this.state.plines && parseInt(this.state.height) < 530) {
                 this.setState({ plines: this.state.plines + 1 }, () => {
                     this.setState({ height: String(parseInt(this.state.height) + 33) + "px" })
@@ -157,12 +159,12 @@ class SRtext extends React.Component
                 this.setState({ plines: nlines }, () => {
                     this.setState({ height: String(parseInt(this.state.height) - 33) + "px" })
                 });
-            }*/
+            }
             this.setState({ caption: e.target.value }, () => {
-                this.props.caption(e.target.value);
+                //this.props.caption(e.target.value);
             });
-            //var plines = (String(e.target.value).split("\n").length - 1);
-            //this.setState({ plines: plines });
+            var plines = (String(e.target.value).split("\n").length - 1);
+            this.setState({ plines: plines });
         }
         else {
             return;
@@ -186,6 +188,7 @@ class SRtext extends React.Component
                     style={{
                         width: "100%",
                         height:this.state.height,
+                        overflow:this.props.type==="reply"?"hidden":"scroll",
                         color:"black",
                         paddingLeft: "35px",
                         paddingRight:"35px",

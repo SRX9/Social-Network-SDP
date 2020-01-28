@@ -5,7 +5,7 @@ emailWelcomeGreet=async (email)=>{
         service: "gmail",
         auth: {
             user: "aquasr9@gmail.com",
-            pass: ""
+            pass: "asdasd"
         }
     });
 

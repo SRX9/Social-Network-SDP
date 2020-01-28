@@ -96,11 +96,8 @@ class OverPost extends React.Component
         else if (this.props.obj.type === 2)
         {
             return (
-              <div className="thumbnail cur con  faded">
+              <div className="thumbnail cur con  border faded">
                 <img src={this.props.obj.photo} className="faded" alt="Image" />
-                <div className="text-blockt">
-                  <IoMdImage style={{fontSize:"50px"}}/>
-                </div>
                 <div
                   class="text-block glass p-2 pr-3"
                   style={{ borderRadius: "0px 15px 15px 0px" }}

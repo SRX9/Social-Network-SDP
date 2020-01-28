@@ -47,6 +47,11 @@ class Login extends React.Component
       
     }
 
+  successCreate = () => {
+    this.props.setHomeUser();
+  }
+
+
     render()
     {
         return (
@@ -88,6 +93,7 @@ class Login extends React.Component
                
                   {this.state.next?
                     <Loginnext 
+                    successCreate={this.successCreate}
                     loadOn={this.props.loadOn}
                     loadOff={this.props.loadOff}
                     username={this.state.identifier}/>
