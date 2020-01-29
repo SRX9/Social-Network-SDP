@@ -95,6 +95,8 @@ let PostModel=mongoose.model('post',{
     hashtags:[subArraySchema],
     usertags:[subArraySchema],
     grouptags:[subArraySchema],
+    visible:Number,
+    reactionStat:Boolean,
     streams:Number,
     reactions:[subArraySchema]
     

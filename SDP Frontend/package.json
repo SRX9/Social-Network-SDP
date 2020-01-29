@@ -26,7 +26,9 @@
     "react-scripts": "3.3.0",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.88.2",
-    "tachyons": "^4.11.1"
+    "swiper": "^5.3.0",
+    "tachyons": "^4.11.1",
+    "uniqid": "^5.2.0"
   },
   "scripts": {
     "start": "react-scripts start",

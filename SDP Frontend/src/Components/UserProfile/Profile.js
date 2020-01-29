@@ -34,6 +34,7 @@ class Profile extends React.Component
             this.props.loadOff();
             if (response.data !== false) {
               this.setState({ loading: false, userObj: response.data }, () => {
+                this.props.getUserObj(response.data);
               });
             }
             else {

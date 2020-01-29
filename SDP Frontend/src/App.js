@@ -11,6 +11,7 @@ import CreatePost from './Components/UserProfile/CreatePost';
 class App extends React.Component {
   state={
     loading:false,
+    userobj:null,
     loggedIn:localStorage.getItem("!@#$")!==undefined,
   }
 
@@ -26,6 +27,11 @@ class App extends React.Component {
     this.setState({loggedIn:true});
   }
 
+  getUserObj=(obj)=>{
+    this.setState({userobj:obj});
+  }
+
+
   logOut=()=>{
     this.setState({  loggedIn: false });
 
@@ -35,42 +41,89 @@ class App extends React.Component {
   {
     return (
       <Router>
-          <Switch>
-            <Route path="/signin" exact component={() => <Login  setHomeUser={this.setHomeUser}  />}></Route>
-            <Route
-              path="/createaccount"
-              exact
+        <Switch>
+          <Route
+            path="/signin"
+            exact
+            component={() => <Login setHomeUser={this.setHomeUser} />}
+          ></Route>
+          <Route
+            path="/createaccount"
+            exact
             component={() => <Register setHomeUser={this.setHomeUser} />}
-            ></Route>
-          <Route path="/profile/:username" exact render={(props) => <Profile logOut={this.logOut} setHomeUser={this.setHomeUser} loadOn={this.loadOn} loadOff={this.loadOff} {...props} />}></Route>
-            <Route path="/profile/:username/create" exact render={(props) => <CreatePost loadOn={this.loadOn} homeuser={this.state.homeuser} loadOff={this.loadOff} {...props} />}></Route>
-
-          </Switch>
+          ></Route>
+          <Route
+            path="/profile/:username"
+            exact
+            render={props => (
+              <Profile
+                logOut={this.logOut}
+                getUserObj={this.getUserObj}
+                loadOn={this.loadOn}
+                loadOff={this.loadOff}
+                {...props}
+              />
+            )}
+          ></Route>
+          <Route
+            path="/profile/:username/create"
+            exact
+            render={props => (
+              <CreatePost
+                loadOn={this.loadOn}
+                homeuser={this.state.homeuser}
+                userobj={this.state.userobj}
+                loadOff={this.loadOff}
+                {...props}
+              />
+            )}
+          ></Route>
+        </Switch>
         <div className="  fixed-bottom">
-          {this.state.loading ? <div className="bar">
-          </div> : <div className="nobar">
-            </div>}
-          <div className="text-center p-3 border  bg-light">
-            <Row type="flex" justify="center  " align="middle"> 
-             <Col span={1}>
-                <h5  >Search</h5>
-              </Col>
-              {this.state.loggedIn?
-              <Col span={2}>
-                <div style={{paddingLeft:"0px",paddingRight:"0px"}}>
-                  <Link to={`/profile/${localStorage.getItem("!@#$")}/create`}>
-                    <h5 className="  myblue  cur fixed-bottom "
-                      style={{ fontSize: "65px", marginBottom: "10px" }}>
-                      <Icon type="plus-circle" className="buttonHov"
-                        style={{ border: "10px solid white", borderRadius: "50px" }} theme="filled" />
-                    </h5>
-                  </Link>
-                </div>
-              </Col>:null}
+          {this.state.loading ? (
+            <div className="bar"></div>
+          ) : (
+            <div className="nobar"></div>
+          )}
+          <div className="text-center  border  bg-light">
+            <Row type="flex" className="mb-2" justify="center" align="middle">
               <Col span={1}>
-                <h5 > Browse</h5>
+                <Icon
+                  type="appstore"
+                  style={{
+                    fontSize: "2rem",
+                    border: "10px solid white",
+                    borderRadius: "50px"
+                  }}
+                />{" "}
               </Col>
-              </Row>
+              {this.state.loggedIn ? (
+                <Col span={1}>
+                  <Link to={`/profile/${localStorage.getItem("!@#$")}/create`}>
+                    <Icon
+                      type="plus-circle"
+                      className="buttonHov m-1"
+                      style={{
+                        fontSize: "2rem",
+                        border: "10px solid white",
+                        borderRadius: "50px"
+                      }}
+                      theme="filled"
+                    />
+                  </Link>
+                </Col>
+              ) : null}
+              <Col span={1}>
+                <Icon
+                  type="user"
+                  style={{
+                    fontSize: "2rem",
+                    border: "10px solid white",
+                    borderRadius: "50px"
+                  }}
+                />{" "}
+              </Col>
+            </Row>
           </div>
         </div>
       </Router>
