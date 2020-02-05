@@ -1,5 +1,5 @@
 import React from "react";
-import {withRouter} from 'react-router-dom';
+import {withRouter,Link} from 'react-router-dom';
 import { Form,message, Input,Icon, Button ,Row, Col} from 'antd';
 import axios from 'axios';
 import "antd/dist/antd.css";
@@ -54,11 +54,22 @@ class Loginnext extends React.Component {
             <Input.Password
               size="default"
               maxLength="25"
+              autoFocus
               prefix={<Icon type="block" style={{ color: 'rgba(0,0,0,.25)' }} />}
               onChange={(event) => this.setState({ password: event.target.value })}
               placeholder="Password"
             />
           </Form.Item>
+        <Row>
+          <Col xs>
+            <Link
+              style={{ fontWeight: "400" }}
+              className="float-right"
+            >
+              <p style={{ fontSize: "1rem", fontWeight: 400 }}>Forgot password?</p>
+            </Link>
+          </Col>
+        </Row>
           <Row className="pl-3 pr-3">
             <Col xs>
               <Button size="default" loading={this.state.loading} onClick={this.Signin} className="w-100" type="primary">

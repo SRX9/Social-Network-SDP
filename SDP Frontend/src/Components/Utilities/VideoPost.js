@@ -3,41 +3,24 @@ import { Row, Col, Modal, Button, Radio, Icon, message } from "antd";
 import "./utilities.css";
 import { MdCrop } from "react-icons/md";
 import axios from "axios";
-import ReactCrop from "react-image-crop";
-import Swiper from "react-id-swiper";
-import "react-image-crop/dist/ReactCrop.css";
 import SRtext from "./SRtext";
-import "swiper/css/swiper.css";
 import uniqid from "uniqid";
+import VideoPlayer from "../Videoplayer/VideoPlayer";
 
 const posture = require("../video.png");
-const params = {
-  grabCursor: true,
-
-  pagination: {
-    el: ".swiper-pagination",
-    hide: false,
-    clickable: true
-  },
-  navigation: {
-    nextEl: ".swiper-button-next",
-    prevEl: ".swiper-button-prev"
-  },
-  spaceBetween: 30
-};
 
 class VideoPost extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeurl: "",
-      activeindex: 0,
-      imgload: false,
+      videoload: false,
+      videoUrl: null,
+      videoObj: null,
       loading: false,
       caption: "",
-      arr: [],
       placeholder: true,
       visible: 1,
+      player:1,
       reactionStat: 1,
       crop: {
         unit: "%",
@@ -50,82 +33,97 @@ class VideoPost extends React.Component {
   }
 
   upload = () => {
-    if (this.state.arr.length <= 0) {
-      message.warning("Select at least one Photo to Post!", 2);
+    if (this.state.placeholder && this.state.videoUrl === null && this.state.videoObj===null) {
+      message.warning("Select a Video to Post!", 1);
       return;
     }
     const obj = this.props.userobj;
     this.setState({ loading: true });
     var bodyFormData = new FormData();
-    for (let i = 0; i < this.state.arr.length; i++) {
-      var img1 = new File([this.state.arr[i].img], uniqid("hello-") + ".jpeg");
-      bodyFormData.append("img", img1);
-    }
+    var vid = this.state.videoObj;
+    bodyFormData.append("vid", vid);
     bodyFormData.append("username", obj.username);
+    bodyFormData.append("fullname", obj.fullname);
     bodyFormData.append("avatar", obj.avatar);
     bodyFormData.append("time", new Date());
     bodyFormData.append("text", this.state.caption);
+    bodyFormData.append("playerType", this.state.player);
     bodyFormData.append("visible", this.state.visible);
     bodyFormData.append("reactionStat", this.state.reactionStat);
     axios
-      .put("http://localhost:3000/uploadVideoPost", bodyFormData)
+      .put("http://localhost:3001/createpost/uploadVideoPost", bodyFormData)
       .then(res => {
-        if (res.data) {
+        if (res.data.stat) {
           this.setState({ loading: false });
+          this.setState({ placeholder: true,caption:"" }, () => {
+            setTimeout(() => { this.setState({ videoUrl: "", videoObj: "" }) }, 1000)
+          });
         } else {
           message.error("Server Down! Please Try After Sometime.", 2);
+          this.setState({ loading: false });
         }
         console.log(res);
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        this.setState({ loading: false })
+        message.warning("Server error!", 4);
+        console.log(err)});
   };
 
-  change = (e, index) => {
-    if (e.target.files && e.target.files.length > 0) {
-      let temp = this.state.arr;
-      const reader = new FileReader();
-      reader.addEventListener("load", () => {
-        temp[index].videourl = reader.result;
-        temp[index].video = reader;
-        this.setState({ arr: temp });
-      });
-      reader.readAsDataURL(e.target.files[0]);
-    } 
-  };
-
-  _handleVideoChange = e => {
+  _handleVideoChange = async e => { 
+    if (!this.state.placeholder ||this.state.videoObj!==null || this.state.videoUrl!==null)
+    {
+      this.setState({placeholder:true},()=>{
+        this.setState({ videoObj: null, videoUrl: null })
+      })
+    }
     if (
       e.target.files &&
       e.target.files.length > 0 &&
-      e.target.files.length < 4
+      e.target.files.length < 2
     ) {
-      let temp = [];
-      this.setState({ imgload: true });
-      for (let i = 0; i < e.target.files.length; i++) {
-        const reader = new FileReader();
-        reader.addEventListener("load", () =>
-          temp.push({
-            videourl: reader.result,
-            video: reader
-          })
-        );
-        reader.readAsDataURL(e.target.files[i]);
+      this.setState({ videoload: true });
+      const reader = new FileReader();
+      let file = e.target.files[0];
+      if (file.size > 157286400) {
+        message.warning("Video Size Should be less than 150MB!", 4);
+        this.setState({ videoload: false });
+        return;
       }
-      this.setState({ arr: temp }, () => {
-        setTimeout(() => {
-          this.setState({ placeholder: false, imgload: false });
-        }, 3000);
-      });
+      let blobURL = URL.createObjectURL(file);
+      var video = document.createElement("video");
+      video.preload = "metadata";
+      video.src = URL.createObjectURL(file);
+      video.onloadedmetadata = async () => {
+        window.URL.revokeObjectURL(blobURL);
+        if(video.duration<211)
+        {
+          this.setState({player:2});
+        }
+        if (video.duration > 1801) {
+          message.warning(
+            "Video Duration should be less than 30 Minutes!",
+            3
+          );
+          this.setState({ videoload: false });
+          return;
+        }
+        else{
+         reader.addEventListener("load",async () =>
+           this.setState({ videoUrl: reader.result, videoObj: file }, () => {
+              setTimeout(() => {
+                this.setState({ placeholder: false, videoload: false });
+              }, 100);
+            })
+          );
+        }
+      };
+      await reader.readAsDataURL(e.target.files[0]);
     } else {
-      message.warning("Max 3 Video Allowed!", 2);
+      message.warning("Max 1 Video Allowed!", 2);
     }
+    
   };
-
-  onImageLoaded = image => {
-    this.imageRef = image;
-  };
-
-
 
   getCaption = val => {
     this.setState({ caption: val });
@@ -138,13 +136,13 @@ class VideoPost extends React.Component {
           <Col
             span={13}
             className="bg-white bor border m-2"
-            style={{ Height: "300px" }}
+            style={{ Height: "30vh" }}
           >
             {this.state.placeholder ? (
-              !this.state.imgload ? (
+              !this.state.videoload ? (
                 <div className="p-4 tc  ">
                   <form>
-                    <label for="file-input">
+                    <label for="file-input3">
                       <img
                         className="pointer"
                         src={posture}
@@ -156,12 +154,12 @@ class VideoPost extends React.Component {
                     </label>
                     <input
                       name="img"
-                      id="file-input"
-                      className="fileInput"
+                      id="file-input3"
+                      className="fileInput3"
                       type="file"
-                      accept="video/*"
-                      multiple={true}
                       style={{ display: "none" }}
+                      accept=".mp4"
+                      multiple={false}
                       onChange={e => this._handleVideoChange(e)}
                     />
                   </form>
@@ -173,54 +171,49 @@ class VideoPost extends React.Component {
               )
             ) : (
               <div className="p-2">
-                <Button
-                  onClick={() => {
-                    this.setState({ placeholder: true }, () => {
-                      this.setState({ arr: [] });
-                    });
-                  }}
-                  className="shadow"
-                  type="danger"
-                  shape="round"
-                >
-                  <Icon type="delete" /> All
-                </Button>
-
-                <Swiper {...params}>
-                  {this.state.arr.map((obj, index) => (
-                    <div className="text-center pb-3">
-                      <span className="text-left">
-                        <form>
-                          <label for={`file-input${index}`}>
-                            <div className="p-1 m-1 pl-2 bor dim shadow-1 pr-2 shadow pointer ">
-                              <Icon type="reload" />
-                            </div>
-                          </label>
-                          <input
-                            id={`file-input${index}`}
-                            className={`file-input${index}`}
-                            type="file"
-                            name="img"
-                            accept="video/*"
-                            multiple={false}
-                            style={{ display: "none" }}
-                            onChange={e => this.change(e, index)}
-                          />
-                        </form>
-                      </span>
-                      <img
-                        src={obj.videourl}
-                        className="p-2 tc text-center  "
-                        style={{
-                          borderRadius: "15px",
-                          width: "auto",
-                          maxHeight: "30vw",
-                          height: "auto"
-                        }}
-                      />
-                    </div>
-                  ))}
-                </Swiper>
+                <span className="d-inline-block ">
+                  <div
+                    onClick={() => {
+                      this.setState({ placeholder: true }, () => {
+                        setTimeout(() => { this.setState({ videoUrl: "", videoObj: "" })},1000)
+                      });
+                    }}
+                    className="p-1 m-1 pl-2 pr-2 bor dim shadow-1  shadow pointer "
+                  >
+                    <Icon type="delete" />
+                  </div>
+                </span>
+                <span className="d-inline-block ">
+                  <form>
+                    <label for={`file-input3`}>
+                      <div className="p-1 m-1 pl-2 pr-2 bor dim shadow-1  shadow pointer ">
+                        <Icon type="reload" />
+                      </div>
+                    </label>
+                    <input
+                      id={`file-input3`}
+                      className={`file-input3`}
+                      type="file"
+                      name="vid"
+                      accept=".mp4"
+                      multiple={false}
+                      style={{ display: "none" }}
+                      onChange={e => this._handleVideoChange(e)}
+                    />
+                  </form>
+                </span>
+                <div className="text-center pb-3">
+                  <VideoPlayer
+                    className="p-2 text-center"
+                    video={this.state.videoUrl}
+                    play={this.props.stop}
+                    style={{
+                      width: "auto",
+                      maxHeight: "30vw",
+                      height: "auto"
+                    }}
+                  />
+                </div>
               </div>
             )}
           </Col>
@@ -229,8 +222,8 @@ class VideoPost extends React.Component {
             className="bg-white text-left p-3 bor border m-2"
             style={{ Height: "300px" }}
           >
-            <h6 className="text-muted">Caption</h6>
-            <SRtext rows={8} getCaption={this.getCaption} />
+            <h6 className="text-muted">Description</h6>
+            <SRtext rows={8} done={this.state.caption} getCaption={this.getCaption} />
             <div className="pt-3 text-left">
               <h6 className="text-muted">Visible To</h6>
               <Radio.Group
@@ -269,44 +262,6 @@ class VideoPost extends React.Component {
             </div>
           </Col>
         </Row>
-        <Modal
-          title="Crop"
-          centered
-          width="400"
-          height="400"
-          footer={null}
-          visible={this.state.cropmodal}
-          onCancel={this.cropclose}
-        >
-          <div>
-            <ReactCrop
-              minHeight="400"
-              maxHeight="700"
-              minWidth="450"
-              imageStyle={{
-                maxWidth: "50vw",
-                borderRadius: "15px",
-                height: "60vh",
-                width: "auto"
-              }}
-              src={this.state.activeurl}
-              crop={this.state.crop}
-              onImageLoaded={this.onImageLoaded}
-              onComplete={this.onCropComplete}
-              onChange={this.onCropChange}
-            />
-          </div>
-
-          <Button
-            shape="round"
-            className="w-100"
-            type="primary"
-            size="large"
-            onClick={this.cropclose}
-          >
-            Crop
-          </Button>
-        </Modal>
       </div>
     );
   }

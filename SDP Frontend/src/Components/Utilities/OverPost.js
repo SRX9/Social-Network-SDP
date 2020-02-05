@@ -4,8 +4,10 @@ import './utilities.css';
 import { MdSlowMotionVideo, MdAudiotrack } from "react-icons/md";
 import { IoMdImage } from "react-icons/io";
 import { Avatar } from 'antd';
+import AudioPlayer from 'react-h5-audio-player';
+import 'react-h5-audio-player/lib/styles.css';
 
-
+const server = "http://localhost:3001/";
 class OverPost extends React.Component
 {
     constructor(props)
@@ -34,17 +36,20 @@ class OverPost extends React.Component
     let temp = text.split(" ");
     var result = [];
     for (var i = 0; i < temp.length; i++) {
-        if (temp[i][0] === '@') {
+
+      if (temp[i][0].trim() === '@' && temp[i].trim().length !== 1 ) {
+          console.log(temp[i])
+
             var a = temp[i];
             result.push(" ");
             result.push(<Link to={'/profile/' + a}><span style={{ cursor: 'pointer' }} >{a}</span></Link>);
         }
-        else if (temp[i][0] === '#') {
+        else if (temp[i][0].trim() === '#' && temp[i].trim().length !== 1) {
             var a1 = temp[i];
             result.push(" ");
             result.push(<Link to={'/tag/' + a1}><span style={{ cursor: 'pointer' }}>{a1}</span></Link>);
         }
-        else if (temp[i][0] === '&') {
+        else if (temp[i][0].trim() === '&' && temp[i].trim().length !== 1) {
             var a2 = temp[i];
             result.push(" ");
             result.push(<Link to={'/group/' + a2}><span style={{ cursor: 'pointer' }}>{a2}</span></Link>);
@@ -63,11 +68,11 @@ class OverPost extends React.Component
         {
             return (
               <div
-                style={{ height: "350px", width: "100%" }}
-                className="br cur  faded  w-100  border text-left overflow-hidden "
+                className="thumbnail1 cur con  border faded text-left overflow-hidden "
+                style={{height:"auto"}}
               >
                 <p
-                  style={{ fontSize: "1.1rem", fontWeight: "500" }}
+                  style={{ fontSize: "1.2rem", fontWeight: "500" }}
                   className="p-4"
                 >
                   {this.tagColor(this.props.obj.text)}
@@ -85,7 +90,7 @@ class OverPost extends React.Component
                   </div>
                   <div className="d-inline-block text-center">
                     <h6 className="text-white">
-                      {this.numberToWord(this.props.obj.reactionsNo)}
+                      {this.numberToWord(this.props.obj.reactionNo)}
                     </h6>
                     <p style={{ fontSize: "1rem" }}>Reactions</p>
                   </div>
@@ -97,7 +102,8 @@ class OverPost extends React.Component
         {
             return (
               <div className="thumbnail cur con  border faded">
-                <img src={this.props.obj.photo} className="faded" alt="Image" />
+                <img src={server+""+this.props.obj.photosLink[0]} 
+                className="faded" alt="Image" />
                 <div
                   class="text-block glass p-2 pr-3"
                   style={{ borderRadius: "0px 15px 15px 0px" }}
@@ -110,7 +116,7 @@ class OverPost extends React.Component
                   </div>
                   <div className="d-inline-block ">
                     <h6 className="text-white">
-                      {this.numberToWord(this.props.obj.reactionsNo)}
+                      {this.numberToWord(this.props.obj.reactionNo)}
                     </h6>
                     <p style={{ fontSize: "1rem" }}>Reactions</p>
                   </div>
@@ -124,7 +130,7 @@ class OverPost extends React.Component
                 <video
                   height="350px"
                   width="auto"
-                  src={this.props.obj.video + "#t=5"}
+                  src={`http://localhost:3001/${this.props.obj.videoLink}#t=4`}
                 />
                 <div className="text-blockt">
                   <MdSlowMotionVideo style={{ fontSize: "50px" }} />
@@ -141,7 +147,7 @@ class OverPost extends React.Component
                   </div>
                   <div className="d-inline-block ">
                     <h6 className="text-white">
-                      {this.numberToWord(this.props.obj.reactionsNo)}
+                      {this.numberToWord(this.props.obj.reactionNo)}
                     </h6>
                     <p style={{ fontSize: "1rem" }}>Reactions</p>
                   </div>
@@ -151,11 +157,15 @@ class OverPost extends React.Component
         }
         else if (this.props.obj.type === 4) {
             return (
-              <div className="thumbnail faded bg-light cur border ">
-                <img src={this.props.obj.photo} className="faded" alt="Image" />
+              <div className="thumbnail  faded bg-light cur border ">
+                <Avatar className={"pointer mt-1  shadow-2-l "} shape="circle" style={{
+                  height: "25vh",
+                  width: "25vh",
+                  border: "10px solid white"
+                }} src={server + "" + this.props.obj.coverLink} />
                 <div className="text-blockt">
                   <MdAudiotrack
-                    className="iconshad"
+                    className="iconshad text-black-50"
                     style={{ fontSize: "50px" }}
                   />
                 </div>
@@ -171,7 +181,7 @@ class OverPost extends React.Component
                   </div>
                   <div className="d-inline-block ">
                     <h6 className="text-white">
-                      {this.numberToWord(this.props.obj.reactionsNo)}
+                      {this.numberToWord(this.props.obj.reactionNo)}
                     </h6>
                     <p style={{ fontSize: "1rem" }}>Reactions</p>
                   </div>

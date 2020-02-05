@@ -151,8 +151,10 @@ class Register extends React.Component {
                     validateStatus={this.state.usernameCheck}
                   >
                     <Input
+                      spellCheck={false}
                       value={this.state.valuser.toLocaleLowerCase().replace(/\s/g, '')}
                       size="default"
+                      autoFocus
                       style={{textTransform:"lowercase"}}
                       onChange={this.checkAndGetUsername}
                       maxLength="25"
@@ -169,6 +171,7 @@ class Register extends React.Component {
                     validateStatus={this.state.fullnameCheck}
                   >
                     <Input
+                      spellCheck={false}
                       prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
                       size="default"
                       maxLength="35"

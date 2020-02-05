@@ -37,7 +37,7 @@ class Dashboard extends React.Component
                     xs={24}
                   >
                     <h5>Bio</h5>
-                    <p style={{ fontSize: "1rem", fontWeight: "500" }}>
+                      <p style={{ fontSize: "1rem", fontWeight: "500" }}>
                       {this.props.obj.intro}
                     </p>    
                   </Col>

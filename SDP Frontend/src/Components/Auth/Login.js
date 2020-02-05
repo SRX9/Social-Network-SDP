@@ -109,6 +109,8 @@ class Login extends React.Component
                       <Input
                         size="default"
                         maxLength="25"
+                        autoFocus
+                        spellCheck={false}
                         value={this.state.identifier.toLowerCase().replace(/\s/g, '')}
                         style={{ textTransform: "lowercase" }}
                         prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
@@ -124,17 +126,7 @@ class Login extends React.Component
                         </Button>
                         </Col>
                       </Row>
-                      <br></br>
-                      <Row>
-                        <Col xs>
-                          <Link
-                            style={{ fontWeight: "400" }}
-                            className="float-right"
-                          >
-                            <p style={{ fontSize: "1rem", fontWeight: 400 }}>Forgot password?</p>
-                          </Link>
-                        </Col>
-                      </Row>
+
                     </div>
 
                   </Form>

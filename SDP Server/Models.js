@@ -83,23 +83,32 @@ let GroupChats = mongoose.model("groupchat", {
   messages: [subArraySchema]
 });
 
-let PostModel=mongoose.model('post',{
+let PostModel=mongoose.model('Post',{
     
     postid:mongoose.Types.ObjectId,
     username:String,
+    type:Number,
     avatar:String,
     time:Date,
     text:{
         type:String,
     },
-    hashtags:[subArraySchema],
-    usertags:[subArraySchema],
-    grouptags:[subArraySchema],
+    hashtags:Array,
+    usertags:Array,
+    //photopost
+    photosLink: Array,
+    //videopost
+    videoLink:String,
+    player:Number,
+    //Audio Post
+    coverLink:String,
+    audioLink:String,
+    //texty
+    grouptags:Array,
     visible:Number,
     reactionStat:Boolean,
-    streams:Number,
-    reactions:[subArraySchema]
-    
+    reactionNo:Number,
+    streams:Number,    
 });
 
 let ReactionsModel=mongoose.model('reaction',{

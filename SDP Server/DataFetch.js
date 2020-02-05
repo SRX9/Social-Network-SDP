@@ -19,6 +19,7 @@ const {
     UserModel, GroupModel, UserInbox, GroupInbox, GroupChats, PostModel, ReactionsModel, UserActionsModel, UserNetworkModel, UserTogroupModel
 } = require("./Models");
 
+//User Profile
 router.get('/getUserProfile', (req, res) => {
     UserModel.findOne({ username: req.query.username }, function (err, docs) {
         if (err === null) {
@@ -30,5 +31,19 @@ router.get('/getUserProfile', (req, res) => {
     })
 });
 
+
+//Posts
+router.get('/getPosts', (req, res) => {
+    PostModel.find({username:req.query.username}, function (err, docs) {
+        if (err===null) {
+            console.log(docs);
+            res.send(docs.reverse());
+        }
+        else {
+            console.log(err,"Asdsad")
+            res.send(false);
+        }
+    })
+});
 
 module.exports = router;

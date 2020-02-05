@@ -19,8 +19,10 @@
     "flexsearch": "^0.6.32",
     "install": "^0.13.0",
     "mongoose": "^5.8.7",
+    "multer": "^1.4.2",
     "nodemailer": "^6.4.2",
-    "random-number": "0.0.9"
+    "random-number": "0.0.9",
+    "uuid": "^3.4.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.2"

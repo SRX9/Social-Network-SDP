@@ -6,7 +6,10 @@ import Posts from './Posts';
 import Inbox from './Inbox';
 import Story from './Story';
 import './Profile.css';
-import { responsiveMap } from 'antd/lib/_util/responsiveObserve';
+import Drawer from 'react-drag-drawer'
+import CoverVideo from '../Videoplayer/CoverVideo';
+import ChangeCover from '../EditComponents/ChangeCover';
+
 
 const { TabPane } = Tabs;
 const serverUrl = "http://localhost:3001/";
@@ -17,6 +20,13 @@ class Profile extends React.Component
     {
         super(props);
         this.state={
+            //covervideo
+            covervideo:false,
+
+            //change cover
+            coverchange:false,
+
+
             userObj:null,
             loading:true,
             exist:true,
@@ -69,6 +79,11 @@ class Profile extends React.Component
           });
       };
     }
+    
+    //change cover photo
+    changeCoverPhoto=(path)=>{
+
+    }
     render()
     {
         if(this.state.loading)
@@ -81,10 +96,12 @@ class Profile extends React.Component
         }
         else{
             return (
-              <div className="style-1">
+              <div className="style-1 stopscroll">
                 <div
+                
                   className="layer"
                   style={{
+                    
                     backgroundImage: `url(${this.state.userObj.coverPhoto})`,
                     backgroundSize: "cover",
                     height: "84vh",
@@ -96,22 +113,16 @@ class Profile extends React.Component
                     <div className="fixed-top">
                       <Row className="">
                         <Col xs={24}>
-                          <div class="row fixed-top pronav justify-content-center p-1 text-center">
+                          <div class="row fixed-top pronav border-bottom justify-content-center p-1 text-center">
                             <div class="col-md-auto">
                               <span
                                 style={{
-                                  fontSize: "2rem",
-                                  fontWeight: "500",
+                                  fontSize: "180%",
+                                  fontWeight: "600",
                                 }}
-                                className="aye "
+                                className="text-dark"
                               >
-                                A
-                                <span
-                                  style={{ }}
-                                  className="fan "
-                                >
-                                  F
-                                </span>
+                                ayefan
                               </span>
                             </div>
                           </div>
@@ -120,11 +131,12 @@ class Profile extends React.Component
                     </div>
                   </Row>
                   <Row>
-                    <Col xs={24} style={{ marginTop: "3.9rem" }} className="">
+                    <Col xs={24} style={{ marginTop: "3rem" }} className="">
                       <Button
                         shape="circle"
                         size="large"
                         type="default"
+                        onClick={()=>this.setState({covervideo:true})}
                         className="m-3  d-inline  "
                       >
                         <Icon type="video-camera" />
@@ -138,6 +150,7 @@ class Profile extends React.Component
                       <Button
                         shape="round"
                         type="primary"
+                        onClick={() => this.setState({ coverchange:true})}
                         className="mt-2 d-inline  float-right  btn"
                       >
                         <Icon type="edit" /> Change Cover
@@ -212,7 +225,8 @@ class Profile extends React.Component
                     </div>
                   </div>
                 </div>
-                <div className="sticky-top fixed-top" style={{ marginTop: "105px", paddingBottom: "50px" }}>
+                <div className="" style={{ marginTop: "105px", paddingBottom: "50px" }}>
+
                   <Tabs
                     size="large"
                     defaultActiveKey="1"
@@ -222,7 +236,7 @@ class Profile extends React.Component
                       <DashBoard obj={this.state.userObj} />
                     </TabPane>
                     <TabPane tab="Posts" key="2">
-                      <Posts userid={this.state.userObj._id} />
+                      <Posts  userid={this.state.userObj.username} />
                     </TabPane>
                     <TabPane tab="Inbox" key="3">
                       <Inbox obj={this.state.userObj} />
@@ -232,6 +246,20 @@ class Profile extends React.Component
                     </TabPane>
                   </Tabs>
                 </div>
+                <Drawer
+                  open={this.state.covervideo}
+                  onRequestClose={()=>this.setState({covervideo:false})}
+                  modalElementClass=""
+                >
+                  <CoverVideo video={this.state.userObj.coverVideo}/>
+                </Drawer>
+                <Drawer
+                  open={this.state.coverchange}
+                  onRequestClose={() => this.setState({ coverchange: false })}
+                  modalElementClass=""
+                >
+                  <ChangeCover changePhoto={this.changeCoverPhoto} user={this.state.userObj}/>
+                </Drawer>
               </div>
             );
         }

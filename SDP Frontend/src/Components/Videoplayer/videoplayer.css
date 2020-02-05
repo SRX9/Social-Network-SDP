@@ -1,0 +1,19 @@
+.nolink:focus{
+    outline: none;
+}
+
+.nolink{
+    border-radius: 10px;
+    height: auto;
+    max-height: 50vh;
+    width:100%;
+}
+
+.modalcover{
+  height: auto;
+  overflow-y: hidden;
+  border-radius: 15px;
+  width: 60vw;
+}
+
+

@@ -12,6 +12,7 @@ class SRtext extends React.Component {
     this.state = {
       buffer: [],
       input: "",
+      value:"",
       loading: false,
       caption:""
     };
@@ -49,7 +50,7 @@ class SRtext extends React.Component {
   };
 
   onSearch = (_, prefix) => {
-      this.setState({prefix:prefix},()=>{
+    this.setState({prefix:prefix},()=>{
     if(prefix==="#")
     {
         this.gettags(_);
@@ -72,21 +73,34 @@ class SRtext extends React.Component {
       <div>
         <Mentions
           loading={this.state.loading}
-          style={{   textAlign:"left",fontSize:"1rem",fontWeight:"500", 
+          style={{ textAlign:"left",fontSize:"1rem",fontWeight:"500", 
           width: "100%" }}
           rows={this.props.rows}
-          placeholder="@user &group #tag"
+          placeholder={this.props.place===undefined?"@user &group #tag":this.props.place}
           prefix={["@", "#", "&"]}
           maxLength={1000}
+          value={this.props.done}
           onSearch={this.onSearch}
           onChange={val => {
-            this.props.getCaption(val);
+            if(this.props.limit===250)
+            {
+              if(val.length<251)
+              { 
+                this.setState({ value: val });
+                this.props.getCaption(val);
+              }
+            }
+            else{
+              if(val.length<1000)
+              {
+                this.setState({ value: val });
+                this.props.getCaption(val);
+              }
+            }
           }}
         >
-          {(this.state.buffer || []).map(value => {
-            if (this.state.prefix !== "#") {
-              return (
-                <Option key={value.name} value={value.name}>
+          {(this.state.buffer || []).map(value =>
+                <Option key={value.name} style={{fontWeight:600}} value={value.name}>
                   <Avatar
                     src={value.avatar}
                     size="large"
@@ -98,17 +112,9 @@ class SRtext extends React.Component {
                       position: "relative"
                     }}
                   />
-                  {" " + value.name}
+              {value.by!=undefined?<span>{"#"+value.name + " : "+ value.number}</span>:value.name}
                 </Option>
-              );
-            } else {
-              return (
-                <Option key={value} value={value}>
-                  {value}
-                </Option>
-              );
-            }
-          })}
+          )}
         </Mentions>
       </div>
     );

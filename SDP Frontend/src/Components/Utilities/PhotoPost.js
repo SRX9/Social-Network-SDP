@@ -52,7 +52,7 @@ class PhotoPost extends React.Component {
   }
 
   upload=()=>{
-    if(this.state.arr.length<=0)
+    if(this.state.placeholder && this.state.arr.length<=0)
     {
       message.warning("Select at least one Photo to Post!",2);
       return; 
@@ -62,7 +62,7 @@ class PhotoPost extends React.Component {
     var bodyFormData = new FormData();
     for(let i=0;i<this.state.arr.length;i++)
     {
-      var img1 = new File([this.state.arr[i].img], uniqid("hello-")+".jpeg");
+      var img1 =new File([this.state.arr[i].img], uniqid() + ".jpg");
       bodyFormData.append("img", img1);
     }
     bodyFormData.append("username",obj.username);
@@ -70,19 +70,23 @@ class PhotoPost extends React.Component {
     bodyFormData.append("time", new Date());
     bodyFormData.append("text", this.state.caption);
     bodyFormData.append("visible", this.state.visible);
-    bodyFormData.append("reactionStat", this.state.reactionStat);
-    axios.put('http://localhost:3000/uploadPhotoPost', bodyFormData)
+    bodyFormData.append("reactionStat", this.state.reactionStat==1?true:false);
+    axios.put('http://localhost:3001/createpost/uploadPhotoPost', bodyFormData)
         .then(res => {
-          if(res.data)
+          if(res.data.stat)
           {
-          this.setState({loading:false})
+            this.setState({loading:false})
+            this.setState({ placeholder: true ,caption:""}, () => { this.setState({ arr: [] }) });
           }
           else{
-            message.error("Server Down! Please Try After Sometime.",2)
+            message.error("Server Down! Please Try After Sometime.",1)
+            this.setState({ loading: false })
           }
-          console.log(res)
         })
-    .catch(err => console.log(err));
+    .catch(err =>{ 
+      this.setState({ loading: false })
+      message.warning("Server error!", 4);
+      console.log(err)});
   }
 
   cropclose = () => {
@@ -93,13 +97,16 @@ class PhotoPost extends React.Component {
   };
 
   change=(e,index)=>{
+    e.preventDefault();
+
     if (e.target.files && e.target.files.length > 0 ) {
       let temp = this.state.arr;
+      let image = e.target.files[0];
         const reader = new FileReader();
         reader.addEventListener("load", () =>{
           temp[index].imgurl = reader.result;
           temp[index].oriurl = reader.result;
-          temp[index].img=reader;
+          temp[index].img=image;
           this.setState({ arr: temp });
 
         }
@@ -110,17 +117,20 @@ class PhotoPost extends React.Component {
   }
 
   _handleImageChange = e => {
+    e.preventDefault();
+
     if (e.target.files && e.target.files.length > 0 &&e.target.files.length < 14) {
       let temp=[];
       this.setState({imgload:true})
       for(let i=0;i<e.target.files.length;i++)
       {
+        let image = e.target.files[i];
       const reader = new FileReader();
       reader.addEventListener("load", () =>
         temp.push({
           imgurl: reader.result,
           oriurl: reader.result,
-          img:reader
+          img:image
         })
       );
       reader.readAsDataURL(e.target.files[i]);
@@ -215,7 +225,7 @@ class PhotoPost extends React.Component {
           <Col
             span={13}
             className="bg-white bor border m-2"
-            style={{ Height: "300px" }}
+            style={{ Height: "30vh" }}
           >
             {this.state.placeholder ? (
               !this.state.imgload ? (
@@ -250,7 +260,8 @@ class PhotoPost extends React.Component {
               )
             ) : (
               <div className="p-2">
-                <Button onClick={()=>{this.setState({placeholder:true},()=>{this.setState({arr:[]})})}} className="shadow" type="danger" shape="round">
+                <Button onClick={()=>{this.setState({placeholder:true},()=>{this.setState({arr:[]})})}}
+                 className="shadow" type="default" shape="round">
                   <Icon type="delete" /> All
                 </Button>
 
@@ -289,7 +300,7 @@ class PhotoPost extends React.Component {
                       </span>
                       <img
                         src={obj.imgurl}
-                        className="p-2 tc text-center  "
+                        className="pt-1 pl-2 pr-2 pb-2 tc text-center  "
                         style={{
                           borderRadius: "15px",
                           width: "auto",
@@ -309,7 +320,7 @@ class PhotoPost extends React.Component {
             style={{ Height: "300px" }}
           >
             <h6 className="text-muted">Caption</h6>
-            <SRtext rows={8} getCaption={this.getCaption} />
+            <SRtext rows={8} done={this.state.caption} getCaption={this.getCaption} />
             <div className="pt-3 text-left">
               <h6 className="text-muted">Visible To</h6>
               <Radio.Group
@@ -343,7 +354,6 @@ class PhotoPost extends React.Component {
                 type="primary"
               >
                 Post
-                <Icon type="double-right" />{" "}
               </Button>
             </div>
           </Col>

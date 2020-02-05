@@ -8,6 +8,7 @@ import "antd/dist/antd.css";
 import './App.css';
 import 'tachyons';
 import CreatePost from './Components/UserProfile/CreatePost';
+import VideoPlayer from './Components/Videoplayer/VideoPlayer';
 class App extends React.Component {
   state={
     loading:false,
@@ -37,6 +38,7 @@ class App extends React.Component {
 
   }
 
+
   render()
   {
     return (
@@ -46,7 +48,9 @@ class App extends React.Component {
             path="/signin"
             exact
             component={() => <Login setHomeUser={this.setHomeUser} />}
-          ></Route>
+          >
+
+          </Route>
           <Route
             path="/createaccount"
             exact
@@ -70,6 +74,7 @@ class App extends React.Component {
             exact
             render={props => (
               <CreatePost
+                getNewPost={this.getNewPost}
                 loadOn={this.loadOn}
                 homeuser={this.state.homeuser}
                 userobj={this.state.userobj}
@@ -85,8 +90,8 @@ class App extends React.Component {
           ) : (
             <div className="nobar"></div>
           )}
-          <div className="text-center  border  bg-light">
-            <Row type="flex" className="mb-2" justify="center" align="middle">
+          <div className="text-center  border  bg-light" style={{height:"7.2vh"}}>
+            <Row type="flex" className="mb-1" justify="center" align="middle">
               <Col span={1}>
                 <Icon
                   type="appstore"

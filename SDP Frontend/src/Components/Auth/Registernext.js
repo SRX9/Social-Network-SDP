@@ -186,6 +186,7 @@ class Registernext extends React.Component {
               style={{ textTransform: "lowercase" }}
               onChange={this.emailGetandCheck}
               maxLength="80"
+              autoFocus
               placeholder="Email"
             />
           </Form.Item>

@@ -16,7 +16,9 @@ const {
     UserModel, GroupModel, UserInbox, GroupInbox, GroupChats, PostModel, ReactionsModel, UserActionsModel, UserNetworkModel, UserTogroupModel
 } = require("./Models");
 
-function initBuffers(){}
+function initBuffers(){
+  
+}
 
 let usersBuffer = [
   {
@@ -32,7 +34,27 @@ let usersBuffer = [
     verified: true
   }
 ];
-let tagsBuffer = ["meToo","DollyChallenge","BlackMamba","starboy","myton","sitaraboy","lolMamba"];
+let tagsBuffer = [{
+  by: "raj",
+  name:"lola",
+  avatar:
+    "https://www.biography.com/.image/t_share/MTE4MDAzNDEwNzMzODYwMzY2/robert-downey-jr-9542052-1-402.jpg",
+  number:13364
+},
+  {
+    by: "raju",
+    name: "mamba",
+    avatar:
+      "https://www.biography.com/.image/t_share/MTE4MDAzNDEwNzMzODYwMzY2/robert-downey-jr-9542052-1-402.jpg",
+    number: 13364
+  },
+  {
+    by: "rajww",
+    name: "dakota",
+    avatar:
+      "https://www.biography.com/.image/t_share/MTE4MDAzNDEwNzMzODYwMzY2/robert-downey-jr-9542052-1-402.jpg",
+    number: 13364
+  },];
 let groupBuffer = [
   {
     name: "blackpink",
@@ -49,15 +71,15 @@ let groupBuffer = [
 ];
 
 router.get('/tag', (req, res) => {
-    res.send(search(req.query.tag,tagsBuffer).slice(0,5));
+  res.send(search(req.query.tag,tagsBuffer, { keySelector: (obj) => obj.name }).slice(0, 5));
 });
 
 router.get("/user", (req, res) => {
-    res.send(search(req.query.user,usersBuffer,{keySelector: (obj) => obj.name}));
+    res.send(search(req.query.user,usersBuffer,{keySelector: (obj) => obj.name}).slice(0,5));
 });
 router.get("/group", (req, res) => {
     res.send(
-      search(req.query.group, groupBuffer, { keySelector: obj => obj.name })
+      search(req.query.group, groupBuffer, { keySelector: obj => obj.name }).slice(0,5)
     );
 });
 
