@@ -116,10 +116,10 @@ class PhotoPost extends React.Component {
       else{alert("asdas")}
   }
 
-  _handleImageChange = e => {
+  _handleImageChange =async e => {
     e.preventDefault();
 
-    if (e.target.files && e.target.files.length > 0 &&e.target.files.length < 14) {
+    if (e.target.files && e.target.files.length > 0 && e.target.files.length < 11) {
       let temp=[];
       this.setState({imgload:true})
       for(let i=0;i<e.target.files.length;i++)

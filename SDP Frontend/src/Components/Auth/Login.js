@@ -5,6 +5,7 @@ import { Form,Icon, Input,Button} from 'antd';
 import { Helmet } from "react-helmet";
 import Loginnext from './Loginnext';
 import axios from 'axios';
+import { withRouter } from 'react-router-dom';
 
 const serverUrl = "http://localhost:3001/";
 
@@ -47,8 +48,16 @@ class Login extends React.Component
       
     }
 
-  successCreate = () => {
-    this.props.setHomeUser();
+    componentWillMount()
+    {
+      if (localStorage.getItem('$#@!')!==null)
+      {
+        this.props.history.push(`/home`);
+      }
+    }
+
+  successCreate = (obj) => {
+    this.props.setHomeUser(obj);
   }
 
 
@@ -159,4 +168,4 @@ class Login extends React.Component
     }
 }
 
-export default Login;
+export default withRouter(Login);

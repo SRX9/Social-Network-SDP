@@ -118,7 +118,7 @@ class VideoPost extends React.Component {
           );
         }
       };
-      await reader.readAsDataURL(e.target.files[0]);
+      reader.readAsDataURL(e.target.files[0]);
     } else {
       message.warning("Max 1 Video Allowed!", 2);
     }

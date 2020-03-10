@@ -7,7 +7,17 @@
   }
 }
 
+::-webkit-scrollbar {
+    width: 0px;  /* Remove scrollbar space */
+    background: transparent;  /* Optional: just make scrollbar invisible */
+}
+/* Optional: show position indicator in red */
+::-webkit-scrollbar-thumb {
+    background: #FF0000;
+}
+
 body{
+    scrollbar-width: none;
     overflow-x: hidden;
 }
 
@@ -85,4 +95,9 @@ body{
           transition: 0.5s;
          box-shadow: 0px 5px 5px 0px rgb(48, 131, 255);
 
+ }
+
+
+ .pointer{
+     cursor: pointer;
  }

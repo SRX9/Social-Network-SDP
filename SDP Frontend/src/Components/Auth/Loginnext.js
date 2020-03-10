@@ -26,10 +26,12 @@ class Loginnext extends React.Component {
       }).then((response) => {
         this.setState({ loading: false });
         if (response.data.state) {
-          localStorage.setItem("!@#$", this.props.username);
-          this.props.successCreate();
+          localStorage.setItem("!@#$", response.data.username);
+          localStorage.setItem("$#@!", response.data.id);
+          console.log(response.data.obj)
+          this.props.successCreate(response.data.obj);
 
-          this.props.history.push(`/profile/${response.data.token}`);
+          this.props.history.push(`/profile/${response.data.username}`);
         }
         else {
           this.setState({ passwordCheck: "error", passwordHelp: "Incorrect Password" });

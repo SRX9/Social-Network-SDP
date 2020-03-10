@@ -71,6 +71,7 @@ let groupBuffer = [
 ];
 
 router.get('/tag', (req, res) => {
+  console.log(search(req.query.tag, tagsBuffer, { keySelector: (obj) => obj.name }).slice(0, 5))
   res.send(search(req.query.tag,tagsBuffer, { keySelector: (obj) => obj.name }).slice(0, 5));
 });
 

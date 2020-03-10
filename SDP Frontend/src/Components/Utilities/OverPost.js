@@ -68,8 +68,7 @@ class OverPost extends React.Component
         {
             return (
               <div
-                className="thumbnail1 cur con  border faded text-left overflow-hidden "
-                style={{height:"auto"}}
+                className="thumbnail cur con  border faded text-left"
               >
                 <p
                   style={{ fontSize: "1.2rem", fontWeight: "500" }}

@@ -5,7 +5,8 @@ import { Form, Input, Button,Icon } from "antd";
 import { Helmet } from "react-helmet";
 import axios from 'axios';
 import Registernext from "./Registernext";
- 
+import { withRouter } from 'react-router-dom';
+
 import "./auth.css";
 
 
@@ -30,6 +31,13 @@ class Register extends React.Component {
 
       next:false,
     };
+  }
+
+  componentWillMount()
+  {
+    if (localStorage.getItem('$#@!') !==null) {
+      this.props.history.push(`/home`);
+    }
   }
 
   checkAndGetUsername= async (event)=>{
@@ -91,8 +99,8 @@ class Register extends React.Component {
     }
   }
   
-  successCreate=()=>{
-    this.props.setHomeUser();
+  successCreate=(obj)=>{
+    this.props.setHomeUser(obj);
   }
 
 
@@ -252,4 +260,4 @@ class Register extends React.Component {
   }
 }
 
-export default Register;
+export default withRouter(Register);

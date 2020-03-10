@@ -42,7 +42,7 @@ class Posts extends React.Component {
                     <Col span={1}>
                     </Col>
                     <Col span={22}>
-                        <Row gutter={[16, 16]} align="middle" className="border-0">
+                        <Row gutter={[16, 16]} justify="center" align="middle" className="border-0">
                             {this.state.posts.map(obj =>
                                 <Col span={6}  >
                                     <OverPost obj={obj} />

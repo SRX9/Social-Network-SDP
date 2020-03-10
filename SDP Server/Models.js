@@ -1,13 +1,6 @@
 const mongoose = require("mongoose");
 const subArraySchema = mongoose.Schema({}, { _id: false });
 
-const networkFanins=mongoose.Schema({
-    userid:mongoose.Types.ObjectId,
-    username:String,
-    fullname:String,
-    verify:Boolean,
-    avatar:String,
-}, { _id: false });
 
 let UserModel = mongoose.model("user", {
   username: {
@@ -17,9 +10,11 @@ let UserModel = mongoose.model("user", {
     type: String
   },
   password:String,
+  privacy:Number,
   inboxid: mongoose.Types.ObjectId,
   fullname: String,
   email: String,
+  phone:Number,
   intro: String,
   country: String,
   region:String,
@@ -84,9 +79,7 @@ let GroupChats = mongoose.model("groupchat", {
 });
 
 let PostModel=mongoose.model('Post',{
-    
-    postid:mongoose.Types.ObjectId,
-    username:String,
+        username:String,
     type:Number,
     avatar:String,
     time:Date,
@@ -108,7 +101,9 @@ let PostModel=mongoose.model('Post',{
     visible:Number,
     reactionStat:Boolean,
     reactionNo:Number,
-    streams:Number,    
+    streams:[String],    
+    love:[String],
+    like:[String],
 });
 
 let ReactionsModel=mongoose.model('reaction',{
@@ -122,6 +117,7 @@ let ReactionsModel=mongoose.model('reaction',{
     like:[subArraySchema]
 });
 
+
 let UserActionsModel=mongoose.model('useraction',{
     userid:mongoose.Types.ObjectId,
     username:String,
@@ -129,13 +125,8 @@ let UserActionsModel=mongoose.model('useraction',{
 });
 
 let UserNetworkModel=mongoose.model('usernetwork',{
-
-  user:{
-    userid:mongoose.Types.ObjectId,
-    username:String,
-    avatar:String,
-  },
-  fanins:[networkFanins]
+  userid: mongoose.Types.ObjectId,
+  fanins:[String]
 });
 
 let UserTogroupModel=mongoose.model('userTogroup',{
@@ -151,6 +142,14 @@ let UserTogroupModel=mongoose.model('userTogroup',{
   }
 });
 
+let FeedsModel=mongoose.model('feeds',{
+
+  userid:mongoose.Types.ObjectId,
+  postid:[String]
+
+});
+
+
 module.exports={
   UserModel:UserModel,
   GroupModel:GroupModel,
@@ -161,5 +160,6 @@ module.exports={
   ReactionsModel:ReactionsModel,
   UserActionsModel:UserActionsModel,
   UserNetworkModel:UserNetworkModel,
-  UserTogroupModel:UserTogroupModel
+  UserTogroupModel:UserTogroupModel,
+  FeedsModel:FeedsModel
 }

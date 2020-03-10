@@ -25,6 +25,11 @@ class CreatePost extends React.Component
 
     componentWillMount()
     {
+      if (localStorage.getItem("!@#$") === null || localStorage.getItem("$#@!")===null)
+      {
+        this.props.history.push(`/signin`);
+
+      }
       if (this.props.userobj!==null)
       {
         if (localStorage.getItem("!@#$") !== null && this.props.match.params.username !== undefined && this.props.userobj.username === this.props.match.params.username) {

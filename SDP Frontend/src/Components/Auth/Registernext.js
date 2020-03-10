@@ -22,7 +22,7 @@ class Registernext extends React.Component {
       country: "",
       countryCheck:"",
 
-      region:"",
+      region:"Select a Region",
       regionCheck:"",
 
       temp:true,
@@ -105,7 +105,8 @@ class Registernext extends React.Component {
       }
     }
     this.setState({ countryCheck: "", countryhelp: "" });
-    this.setState({temp:false,country: event,SelectedCountry:this.state.countryData[index].regions});
+    this.setState({temp:false,country: event,
+      SelectedCountry:this.state.countryData[index].regions,region:"Select a Region"});
   }
 
   selectRegion=(event)=> {
@@ -126,7 +127,7 @@ class Registernext extends React.Component {
       this.setState({ countryCheck: "error", countryhelp: "Select your Country." });
     }
     else{
-      if(this.state.region==="")
+      if (this.state.region ==="Select a Region")
       {
         allright = false;
         this.setState({ regionCheck: "error", regionhelp: "Select your Region." });
@@ -153,9 +154,10 @@ class Registernext extends React.Component {
         })
           .then((response) => {
             this.setState({ loading: false });
-            if (response.data) {
+            if (response.data.state) {
               localStorage.setItem("!@#$", this.props.username);
-              this.props.successCreate();
+              localStorage.setItem("$#@!", response.data.id);
+              this.props.successCreate(response.data.obj);
               this.props.history.push(`/profile/${this.props.username}`);
             }
             else {
@@ -220,6 +222,7 @@ class Registernext extends React.Component {
             >
               <Select    
                 showSearch
+                value={this.state.region}
                 placeholder="Select Region."
                 optionFilterProp="children"
                 onChange={this.selectRegion}

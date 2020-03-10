@@ -11,6 +11,9 @@ var Authroutes= require('./Auth.js');
 var DataFetchrouter=require('./DataFetch');
 var Searchrouter=require('./search');
 var PostCreateRouter=require('./PostStore');
+var EditRouter =require('./Edit');
+var NetworkRouter=require('./Fannetwork');
+var FeedsRouter=require('./FeedsFetch');
 
 //middlewares
 app.use(cors());
@@ -21,6 +24,9 @@ app.use("/auth", Authroutes);
 app.use("/data", DataFetchrouter);
 app.use("/search", Searchrouter);
 app.use("/createpost",PostCreateRouter);
+app.use("/edit", EditRouter);
+app.use("/network", NetworkRouter);
+app.use("/feeds", FeedsRouter);
 
 
 

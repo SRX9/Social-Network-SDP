@@ -36,7 +36,6 @@ router.get('/getUserProfile', (req, res) => {
 router.get('/getPosts', (req, res) => {
     PostModel.find({username:req.query.username}, function (err, docs) {
         if (err===null) {
-            console.log(docs);
             res.send(docs.reverse());
         }
         else {
@@ -46,4 +45,14 @@ router.get('/getPosts', (req, res) => {
     })
 });
 
+
+//fanornot
+router.get('/fanornot',(req,res)=>{
+    var user=req.query.user;
+    var star=req.query.star;
+    console.log(user,star)
+    UserNetworkModel.findOne({userid:mongoose.Types.ObjectId(user)},(err,data)=>{
+        res.send(data.fanins.includes(star))
+    });
+});
 module.exports = router;

@@ -5,7 +5,7 @@ const rn = require("random-number");
 const { emailWelcomeGreet,emailOrName } =require('./Utilities');
 const { unameTree,emailTree }=require('./Trees');
 const bcrypt = require('bcryptjs');
-
+let {fannet} =require('./Network');
 
 //moongoose setup
 mongoose.Promise = global.Promise;
@@ -57,7 +57,7 @@ router.post('/registerOne',(req,res)=>{
   const country = req.body.country;
   const region = req.body.region;
   const email=req.body.email;
-  emailWelcomeGreet(email);
+  //emailWelcomeGreet(email);
   bcrypt.genSalt(10, function (err, salt) {
         bcrypt.hash(password, salt, function (err, hash) {
           let newUser = new UserModel({
@@ -85,9 +85,17 @@ router.post('/registerOne',(req,res)=>{
           newUser.save().then((data) => {
             unameTree.insert(username);
             emailTree.insert(email);
-            res.send({ state: true });
+            let newUserNetwork=new UserNetworkModel({
+              userid: data._id,
+              fanins:[]
+            })
+            newUserNetwork.save().then(doc=>{
+              fannet.setNode(data._id, "user");
+              console.log(fannet.nodes());
+              res.send({ state: true, username: data.username, id: data._id,obj:data });
+            })
           }, (e) => {
-            console.log(e);
+            console.log(e,"Error inside Register Route.");
             res.send(false);
           });
         });
@@ -117,10 +125,10 @@ router.get('/signinCheck',(req,res)=>{
 router.post('/signin',(req,res)=>{
   if(emailOrName(req.body.username))
   {
-    UserModel.findOne({ email: req.body.username }, 'password username', function (err, docs) {
+    UserModel.findOne({ email: req.body.username }, function (err, docs) {
       if (err === null) {
         bcrypt.compare(req.body.password, docs.password, function (err, response) {
-          res.send({state:response,token:docs.username});
+          res.send({state:response,username:docs.username,id:docs._id,obj:docs});
         });
       }
       else {
@@ -129,10 +137,11 @@ router.post('/signin',(req,res)=>{
     })
   }
   else{
-    UserModel.findOne({ username: req.body.username }, 'password username', function (err, docs) {
+    UserModel.findOne({ username: req.body.username }, function (err, docs) {
       if (err === null) {
+        console.log(docs)
         bcrypt.compare(req.body.password, docs.password, function (err, response) {
-          res.send({ state: response, token: docs.username });
+          res.send({ state: response, username: docs.username, id: docs._id, obj: docs});
         });
       }
       else {
