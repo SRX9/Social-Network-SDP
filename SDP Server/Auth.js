@@ -18,7 +18,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/ayefan', {
 //mongod --dbpath C:\Users\SRx\Desktop\Database
 //Database models
 const {
-      UserModel,GroupModel,UserInbox,GroupInbox,GroupChats,PostModel,ReactionsModel,UserActionsModel,UserNetworkModel,UserTogroupModel
+   SaveModel,  FeedsModel, UserModel,GroupModel,UserInbox,GroupInbox,GroupChats,PostModel,ReactionsModel,UserActionsModel,UserNetworkModel,UserTogroupModel
 } = require("./Models");
 
 
@@ -74,26 +74,50 @@ router.post('/registerOne',(req,res)=>{
             fanins: 0,
             group: [],
             NoPost: 0,
-            avatar: "",
+            avatar: "http://localhost:3001/cover.png",
             coverphotoview: true,
             coverPhoto: "",
             coverVideo: "",
             story: "",
             blocked: []
           });
-
           newUser.save().then((data) => {
             unameTree.insert(username);
             emailTree.insert(email);
+            
+            //User Netowrk Model
             let newUserNetwork=new UserNetworkModel({
               userid: data._id,
               fanins:[]
             })
             newUserNetwork.save().then(doc=>{
               fannet.setNode(data._id, "user");
+
+              //Feeds Model
+              let newFeedModel=new FeedsModel({
+                userid: data._id,
+                postsid: []
+              });
+              newFeedModel.save().then((d)=>{
+                console.log("created feeds model")
+              }).catch(e=>{
+                console.log(e,"error creating feeds model")
+              });
+
+              //Save Post Model
+              let newSaveModel=new SaveModel({
+                userid:data._id,
+                postsid:[]
+              })
+              newSaveModel.save().then((d) => {
+                console.log("created save model")
+              }).catch(e => {
+                console.log(e, "error creating save model")
+              });
+
               console.log(fannet.nodes());
               res.send({ state: true, username: data.username, id: data._id,obj:data });
-            })
+            });
           }, (e) => {
             console.log(e,"Error inside Register Route.");
             res.send(false);

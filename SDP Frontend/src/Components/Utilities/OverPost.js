@@ -32,35 +32,33 @@ class OverPost extends React.Component
         return String(x)
     }
     }
-    tagColor=(text)=> {
-    let temp = text.split(" ");
+    
+  tagColor = (text) => {
+    let temp = text.split("\n").join(" ").split(" ");
     var result = [];
     for (var i = 0; i < temp.length; i++) {
-
-      if (temp[i][0].trim() === '@' && temp[i].trim().length !== 1 ) {
-          console.log(temp[i])
-
-            var a = temp[i];
-            result.push(" ");
-            result.push(<Link to={'/profile/' + a}><span style={{ cursor: 'pointer' }} >{a}</span></Link>);
-        }
-        else if (temp[i][0].trim() === '#' && temp[i].trim().length !== 1) {
-            var a1 = temp[i];
-            result.push(" ");
-            result.push(<Link to={'/tag/' + a1}><span style={{ cursor: 'pointer' }}>{a1}</span></Link>);
-        }
-        else if (temp[i][0].trim() === '&' && temp[i].trim().length !== 1) {
-            var a2 = temp[i];
-            result.push(" ");
-            result.push(<Link to={'/group/' + a2}><span style={{ cursor: 'pointer' }}>{a2}</span></Link>);
-        }
-        else {
-            result.push(" ");
-            result.push(<span style={{ color: 'black' }}>{temp[i]}</span>);
-        }
+      if (temp[i][0] !== undefined && temp[i][0].trim() === '@' && temp[i].trim().length !== 1) {
+        var a = temp[i];
+        result.push(" ");
+        result.push(<Link to={'/profile/' + a}><span style={{ cursor: 'pointer' }} >{a}</span></Link>);
+      }
+      else if (temp[i][0] !== undefined && temp[i][0].trim() === '#' && temp[i].trim().length !== 1) {
+        var a1 = temp[i];
+        result.push(" ");
+        result.push(<Link to={'/tag/' + a1}><span style={{ cursor: 'pointer' }}>{a1}</span></Link>);
+      }
+      else if (temp[i][0] !== undefined && temp[i][0].trim() === '&' && temp[i].trim().length !== 1) {
+        var a2 = temp[i];
+        result.push(" ");
+        result.push(<Link to={'/group/' + a2}><span style={{ cursor: 'pointer' }}>{a2}</span></Link>);
+      }
+      else {
+        result.push(" ");
+        result.push(<span style={{ color: 'black' }}>{temp[i]}</span>);
+      }
     }
-    return result;
-    }
+    return result.slice(1, result.length);
+  }
 
     render()
     {

@@ -1,0 +1,137 @@
+@import url('https://fonts.googleapis.com/css?family=Lobster+Two:700&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Comfortaa:700&display=swap');
+.postcard{
+    margin: 10px;
+    border-radius: 10px;
+    border:1px solid rgb(231, 231, 231);
+    height:100%
+}
+
+.time{
+    font-size:85%;
+    font-weight: 600;
+}
+
+.username{
+    color: black;
+    font-size: 116%;
+}
+
+.saveicon{
+    font-size: x-large;
+    color: black;
+}
+.likeicon{
+    font-size: 185%;
+    color: black;
+}
+
+.loveicon{
+ font-size: 180%;
+    color: black;
+}
+
+*{
+    box-sizing: border-box;
+}
+
+.space{
+    letter-spacing: 0px;
+    font-weight: 600;
+    font-family: 'Comfortaa', cursive;
+}
+
+
+
+.texty{
+    margin-left: 10px;
+    margin-right: 10px;
+    font-size: 100%;
+    font-weight: 500;
+    color: black;
+white-space:pre-line; 
+}
+
+.stannum{
+        font-size: 150%;
+    font-family: 'Comfortaa', cursive;
+}
+.stans{
+    font-size: 100%;
+    font-family: 'Comfortaa', cursive;
+}
+
+.divide{
+    font-size: x-large;
+    color: lightgray;
+    margin-top: -11.5px;
+}
+
+
+
+.icon{
+    cursor: pointer;
+}
+
+
+.myblue{
+    color: rgb(0, 172, 230);
+}
+
+
+.reaction{
+        font-size: 110%;
+        letter-spacing: 0.5px;
+}
+
+.reactionNo{
+    font-size: large;
+    margin-left: 100px;
+}
+
+.ll{
+    font-weight: 500;
+    font-size: large;
+}
+
+.userlink{
+    font-size: 105%;
+    font-weight: 500;
+}
+
+
+.stat{
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    font-size: 105%;
+}
+
+
+.reacttext{
+    padding-left: 55px;
+    margin-top: -10px;
+    float: left;
+    letter-spacing: 0.4px;
+}
+
+
+.reactimage{
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.reactimagecenter {
+ float: left;
+  max-width: 100%;
+border-radius:0px 15px 25px 25px ;
+  max-height: 75vh;
+  overflow:hidden;
+}
+.reactimagecenter img {
+  height: auto;
+border-radius:0px 25px 25px 25px ;
+  max-width: 100%;
+  left: 50%;
+  position: relative;
+  transform: translateX(-50%);
+}

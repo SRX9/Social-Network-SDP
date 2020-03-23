@@ -242,20 +242,16 @@ class Profile extends React.Component
                           :null}
 
                         </Col>
-                        <Col span={4} >
-                          <div  class="row shadow-4  pronav  justify-content-center pb-2 text-center">
-                            <div class="col-md-auto">
-                              <span
+                        <Col span={4} className="text-center">
+                              <div
                                 style={{
                                   fontSize: "180%",
                                   fontWeight: "600",
                                 }}
-                                className="text-dark"
+                                className="text-dark shadow-4 pronav fixed-top ayefan"
                               >
-                                AyeFan
-                              </span>
-                            </div>
-                          </div>
+                                ayefan
+                              </div>
                         </Col>
                         <Col className="bg-transparent" span={10} >
                                 {this.state.homeornot?

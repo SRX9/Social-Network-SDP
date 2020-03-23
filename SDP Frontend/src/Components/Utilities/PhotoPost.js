@@ -65,7 +65,9 @@ class PhotoPost extends React.Component {
       var img1 =new File([this.state.arr[i].img], uniqid() + ".jpg");
       bodyFormData.append("img", img1);
     }
+    bodyFormData.append("userid", obj._id);
     bodyFormData.append("username",obj.username);
+    bodyFormData.append("fullname", obj.fullname);
     bodyFormData.append("avatar", obj.avatar);
     bodyFormData.append("time", new Date());
     bodyFormData.append("text", this.state.caption);

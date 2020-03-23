@@ -19,5 +19,18 @@ const {
   FeedsModel,  UserModel, GroupModel, UserInbox, GroupInbox, GroupChats, PostModel, ReactionsModel, UserActionsModel, UserNetworkModel, UserTogroupModel
 } = require("./Models");
 
+router.get('/userfeeds',(req,res)=>{
+  FeedsModel.findOne({ userid:req.query.userid.toString()},"postsid",(err,docs)=>{
+     res.send(docs)
+  })
+})
+
+//get Post Details
+router.get('/getpostdetails',(req,res)=>{
+  PostModel.findOne({_id:req.query.postid},(err,doc)=>{
+    res.send(doc);
+  })
+})
+
 
 module.exports = router;

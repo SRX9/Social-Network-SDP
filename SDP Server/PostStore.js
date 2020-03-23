@@ -5,6 +5,7 @@ const { emailWelcomeGreet, emailOrName } = require('./Utilities');
 const bcrypt = require('bcryptjs');
 const multer = require('multer');
 const uuidv1 = require('uuid/v1');
+let { fannet } = require('./Network');
 
 
 
@@ -56,6 +57,11 @@ const AudioPostUpload = multer({
     limits: { fileSize: 52428800 },
 })
 
+//Database Models
+const {
+   LikeModel,LoveModel,SaveModel,StanModel ,FeedsModel, UserModel, GroupModel, UserInbox, GroupInbox, GroupChats, PostModel, ReactionsModel, UserActionsModel, UserNetworkModel, UserTogroupModel
+} = require("./Models");
+
 //moongoose setup
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://127.0.0.1:27017/ayefan', {
@@ -64,11 +70,47 @@ mongoose.connect('mongodb://127.0.0.1:27017/ayefan', {
 });
 
 
-//mongod --dbpath C:\Users\SRx\Desktop\Database
-//Database models
-const {
-    UserModel, GroupModel, UserInbox, GroupInbox, GroupChats, PostModel, ReactionsModel, UserActionsModel, UserNetworkModel, UserTogroupModel
-} = require("./Models");
+function NotifyAll(id,postid)
+{
+    console.log(id,postid);
+    
+    let fans=fannet.inEdges(id);
+    console.log(fans);
+    console.log(fans,"asdsadsad")
+    fans.map(fanid=>{
+        FeedsModel.updateOne({ userid:mongoose.Types.ObjectId(fanid.v) },
+            {
+                $push:
+                    { postsid: postid }
+            }).then(doc=>{
+                console.log(doc,"post feed");
+            }).catch(e => {
+                console.log(e, "Inside Notifying all Fans on Posts")
+            });
+    })
+}
+
+function InitPostStat(postid)
+{
+    let newLike=new LikeModel({
+        postid:postid,
+        userid:[]
+    });
+    newLike.save().then(()=>{console.log("Like Model Created")}).catch(e=>console.log("e,error in creating like Model"))
+
+    let newLove = new LoveModel({
+        postid: postid,
+        userid: []
+    });
+    newLove.save().then(() => { console.log("Love Model Created") }).catch(e => console.log("e,error in creating like Model"))
+
+    let newStan = new StanModel({
+        postid: postid,
+        userid: []
+    });
+    newStan.save().then(() => { console.log("stan Model Created") }).catch(e => console.log("e,error in creating like Model"))
+
+}
 
 //PhotoPost
 router.put('/uploadPhotoPost', PhotoPostUpload.array('img', 10),(req,res)=>{
@@ -93,7 +135,9 @@ router.put('/uploadPhotoPost', PhotoPostUpload.array('img', 10),(req,res)=>{
         }
     }
     let newPost=new PostModel({
+        userid:req.body.userid,
         username: req.body.username,
+        fullname:req.body.fullname,
         avatar: req.body.avatar,
         time: req.body.time,
         type:2,
@@ -106,9 +150,16 @@ router.put('/uploadPhotoPost', PhotoPostUpload.array('img', 10),(req,res)=>{
         reactionStat: req.body.reactionStat,
         streams: 0,
         reactionNo:0,
+        love:0,
+        like:0
     })
 
     newPost.save().then((doc)=>{
+
+        //notifying all fans
+        NotifyAll(req.body.userid,doc._id);
+        InitPostStat(doc._id);    
+
         res.send({stat:true});
     },(e)=>{
         console.log(e,"Inside Photo Post upload");
@@ -137,6 +188,7 @@ router.put('/uploadVideoPost', VideoPostUpload.array('vid',1), (req, res) => {
     let newPost = new PostModel({
         username: req.body.username,
         avatar: req.body.avatar,
+        fullname: req.body.fullname,
         time: req.body.time,
         type: 3,
         text: req.body.text,
@@ -148,10 +200,17 @@ router.put('/uploadVideoPost', VideoPostUpload.array('vid',1), (req, res) => {
         reactionStat: req.body.reactionStat,
         streams: 0,
         reactionNo: 0,
+        love: 0,
+        like: 0
     })
 
     newPost.save().then((doc) => {
         console.log(doc);
+
+        //notifying all fans
+        NotifyAll(req.body.userid, doc._id)
+        InitPostStat(doc._id);    
+
         res.send({ stat: true});
     }, (e) => {
         console.log(e, "Inside Vif=deo Post upload");
@@ -182,8 +241,10 @@ router.put('/uploadAudioPost', AudioPostUpload.array('aud', 2), (req, res) => {
         }
     }
     let newPost = new PostModel({
+        userid: req.body.userid,
         username: req.body.username,
         avatar: req.body.avatar,
+        fullname: req.body.fullname,
         time: req.body.time,
         type: 4,
         text: req.body.text,
@@ -196,9 +257,16 @@ router.put('/uploadAudioPost', AudioPostUpload.array('aud', 2), (req, res) => {
         reactionStat: req.body.reactionStat,
         streams: 0,
         reactionNo: 0,
+        love: 0,
+        like: 0
     })
 
     newPost.save().then((doc) => {
+
+        //notifying all fans
+        NotifyAll(req.body.userid, doc._id)
+        InitPostStat(doc._id);    
+
         res.send({ stat: true });
     }, (e) => {
         console.log(e, "Inside Photo Post upload");
@@ -225,9 +293,11 @@ router.post('/uploadTextPost',(req, res) => {
         }
     }
     let newPost = new PostModel({
+        userid:req.body.userid,
         username: req.body.username,
         avatar: req.body.avatar,
         time: req.body.time,
+        fullname: req.body.fullname,
         type: 1,
         text: req.body.text,
         hashtags: tag,
@@ -237,10 +307,16 @@ router.post('/uploadTextPost',(req, res) => {
         reactionStat: req.body.reactionStat,
         streams: 0,
         reactionNo: 0,
+        loves: 0,
+        likes: 0
     })
 
     newPost.save().then((doc) => {
-        console.log(doc);
+        //notifying all fans
+        NotifyAll(req.body.userid, doc._id);
+        InitPostStat(doc._id);    
+
+
         res.send({ stat: true });
     }, (e) => {
         console.log(e, "Inside Text Post upload");

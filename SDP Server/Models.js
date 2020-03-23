@@ -17,6 +17,7 @@ let UserModel = mongoose.model("user", {
   phone:Number,
   intro: String,
   country: String,
+  verify:Number,
   region:String,
   state: String,
   fans: Number,
@@ -79,7 +80,9 @@ let GroupChats = mongoose.model("groupchat", {
 });
 
 let PostModel=mongoose.model('Post',{
-        username:String,
+    userid:mongoose.Types.ObjectId,
+    username:String,
+    fullname:String,
     type:Number,
     avatar:String,
     time:Date,
@@ -101,9 +104,9 @@ let PostModel=mongoose.model('Post',{
     visible:Number,
     reactionStat:Boolean,
     reactionNo:Number,
-    streams:[String],    
-    love:[String],
-    like:[String],
+    streams:Number,    
+    loves:Number,
+    likes:Number,
 });
 
 let ReactionsModel=mongoose.model('reaction',{
@@ -115,6 +118,26 @@ let ReactionsModel=mongoose.model('reaction',{
     reaction:String,
     reply:[subArraySchema],
     like:[subArraySchema]
+});
+
+let LikeModel=mongoose.model('likes',{
+  postid:mongoose.Types.ObjectId,
+  userid:[String]
+});
+
+let LoveModel = mongoose.model('hearts', {
+  postid: mongoose.Types.ObjectId,
+  userid: [String]
+});
+
+let SaveModel=mongoose.model('save',{
+  userid:mongoose.Types.ObjectId,
+  postid:[String]
+});
+
+let StanModel=mongoose.model('stans',{
+  postid:mongoose.Types.ObjectId,
+  userid:[String]
 });
 
 
@@ -145,20 +168,29 @@ let UserTogroupModel=mongoose.model('userTogroup',{
 let FeedsModel=mongoose.model('feeds',{
 
   userid:mongoose.Types.ObjectId,
-  postid:[String]
+  postsid:[String]
 
 });
 
 
 module.exports={
+  //Feeds Statistics
+  LikeModel:LikeModel,
+  LoveModel:LoveModel,
+  StanModel:StanModel,
+  SaveModel:SaveModel,
+  ReactionsModel: ReactionsModel,
+
+  //General Model
   UserModel:UserModel,
   GroupModel:GroupModel,
   UserInbox:UserInbox,
   GroupInbox:GroupInbox,
   GroupChats:GroupChats,
   PostModel:PostModel,
-  ReactionsModel:ReactionsModel,
   UserActionsModel:UserActionsModel,
+
+  //Netowork Model
   UserNetworkModel:UserNetworkModel,
   UserTogroupModel:UserTogroupModel,
   FeedsModel:FeedsModel

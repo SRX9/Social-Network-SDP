@@ -68,6 +68,7 @@ class Texty extends React.Component {
         axios.post('http://localhost:3001/createpost/uploadTextPost', {
             username: this.props.userobj.username,
             fullname: this.props.userobj.fullname,
+            userid:this.props.userobj._id,
             text:this.state.caption,
             visible:this.state.visible,
             reactionStat:this.state.reactionStat===1?true:false,

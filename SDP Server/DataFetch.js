@@ -55,4 +55,5 @@ router.get('/fanornot',(req,res)=>{
         res.send(data.fanins.includes(star))
     });
 });
+
 module.exports = router;

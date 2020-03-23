@@ -2,6 +2,9 @@ import React from 'react';
 import { BrowserRouter as Router, Switch, Route, Link} from 'react-router-dom';
 import Login from './Components/Auth/Login';
 import Register from './Components/Auth/Register';
+import 'react-app-polyfill/ie9';
+import 'react-app-polyfill/ie11';
+import 'react-app-polyfill/stable';
 import {Icon,Row,Col} from 'antd';
 import Profile from './Components/UserProfile/Profile';
 import "antd/dist/antd.css";
@@ -140,7 +143,7 @@ class App extends React.Component {
           ) : (
             <div className="nobar"></div>
           )}
-          <div className="text-center pt-1  border  bg-light" >
+          <div className="text-center pt-1  border  bg-white" >
             <Row type="flex" gutter={15} className="mb-1" justify="center" align="middle">
               {this.state.loggedIn ?<Col >
               <Link to="/home">

@@ -1,5 +1,6 @@
 import React from 'react';
-import '../App.css';
+import './Post.css';
+import { Row, Col } from 'antd';
 
 
 class VideoPost extends React.Component {
@@ -12,8 +13,8 @@ class VideoPost extends React.Component {
 
     render() {
         return (
-            <div>
-                VideoPost
+            <div className="postcard" >
+                video
             </div>
         )
     }

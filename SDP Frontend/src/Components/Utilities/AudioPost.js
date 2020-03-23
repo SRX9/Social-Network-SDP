@@ -62,6 +62,7 @@ class AudioPost extends React.Component {
           var cover = this.state.coverObj;
           bodyFormData.append("aud", aud);
           bodyFormData.append("aud", cover);
+          bodyFormData.append("userid", obj._id);
           bodyFormData.append("username", obj.username);
           bodyFormData.append("fullname", obj.fullname);
           bodyFormData.append("avatar", obj.avatar);

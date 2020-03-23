@@ -42,6 +42,7 @@ class VideoPost extends React.Component {
     var bodyFormData = new FormData();
     var vid = this.state.videoObj;
     bodyFormData.append("vid", vid);
+    bodyFormData.append("userid", obj._id);
     bodyFormData.append("username", obj.username);
     bodyFormData.append("fullname", obj.fullname);
     bodyFormData.append("avatar", obj.avatar);

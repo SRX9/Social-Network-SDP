@@ -87,7 +87,16 @@ router.put('/EditUserDetail', PhotoPostUpload.array('avatar', 1), (req, res) => 
         if (req.files.length>=1)
         {
             doc.avatar = link
+            PostModel.updateMany({ userid: req.body.userid }, { $set: { avatar: link } }).then(doc => {
+                console.log("avatar Modified in Posts");
+            })
         }
+        PostModel.updateMany({ userid: req.body.userid }, { $set: { username: req.body.username } }).then(doc=>{
+            console.log("username Modified in Posts");
+        })
+        PostModel.updateMany({ userid: req.body.userid }, { $set: { fullname: req.body.fullname } }).then(doc => {
+            console.log("fullname Modified in Posts");
+        })
         doc.username=req.body.username,
         doc.fullname=req.body.fullname,
         doc.intro=req.body.bio,

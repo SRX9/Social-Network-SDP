@@ -1,5 +1,6 @@
 import React from 'react';
-import '../App.css';
+import './Post.css';
+import {Row,Col} from 'antd';
 
 
 class ImagePost extends React.Component
@@ -15,8 +16,9 @@ class ImagePost extends React.Component
     render()
     {
         return(
-            <div>
-                ImagePost
+            <div className="postcard" >
+                image
+
             </div>
         )
     }
