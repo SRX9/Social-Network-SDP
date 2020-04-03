@@ -28,6 +28,7 @@ class Loginnext extends React.Component {
         if (response.data.state) {
           localStorage.setItem("!@#$", response.data.username);
           localStorage.setItem("$#@!", response.data.id);
+          localStorage.setItem("ava", response.data.obj.avatar);
           console.log(response.data.obj)
           this.props.successCreate(response.data.obj);
 

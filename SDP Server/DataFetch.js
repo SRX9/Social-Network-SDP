@@ -5,13 +5,6 @@ const { emailWelcomeGreet, emailOrName } = require('./Utilities');
 const bcrypt = require('bcryptjs');
 
 
-//moongoose setup
-mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://127.0.0.1:27017/ayefan', {
-    useCreateIndex: true,
-    useNewUrlParser: true
-});
-
 
 //mongod --dbpath C:\Users\SRx\Desktop\Database
 //Database models
@@ -31,6 +24,17 @@ router.get('/getUserProfile', (req, res) => {
     })
 });
 
+//User profile sastar purtu
+router.get('/getUserProfileInit',(req,res)=>{
+    UserModel.findOne({ _id: req.query.userid },"username fullname avatar verify" ,function (err, docs) {
+        if (err === null) {
+            res.send(docs);
+        }
+        else {
+            res.send(false);
+        }
+    })
+})
 
 //Posts
 router.get('/getPosts', (req, res) => {

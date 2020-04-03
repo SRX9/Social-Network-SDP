@@ -3,8 +3,14 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 3001;
+const mongoose = require('mongoose');
 
 //file routes
+mongoose.Promise = global.Promise;
+mongoose.connect('mongodb://127.0.0.1:27017/ayefan', {
+    useCreateIndex: true,
+    useNewUrlParser: true
+});
 
 /* authentication routes */
 var Authroutes= require('./Auth.js');

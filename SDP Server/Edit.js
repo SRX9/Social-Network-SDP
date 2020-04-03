@@ -6,11 +6,6 @@ const multer = require('multer');
 const uuidv1 = require('uuid/v1');
 const bcrypt = require('bcryptjs');
 
-mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://127.0.0.1:27017/ayefan', {
-    useCreateIndex: true,
-    useNewUrlParser: true
-});
 
 
 var PhotoPostStorage = multer.diskStorage({

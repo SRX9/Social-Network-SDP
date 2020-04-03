@@ -2,11 +2,6 @@ var Graph = require("graphlib").Graph;
 var fannet = new Graph({ directed: true, compound: true, multigraph: true });
 const express = require("express");
 const mongoose = require('mongoose');
-mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://127.0.0.1:27017/ayefan', {
-    useCreateIndex: true,
-    useNewUrlParser: true
-});
 
 //Database Models
 const {

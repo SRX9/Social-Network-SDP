@@ -7,12 +7,6 @@ const { unameTree,emailTree }=require('./Trees');
 const bcrypt = require('bcryptjs');
 let {fannet} =require('./Network');
 
-//moongoose setup
-mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://127.0.0.1:27017/ayefan', {
-  useCreateIndex: true,
-  useNewUrlParser: true
-});
 
 
 //mongod --dbpath C:\Users\SRx\Desktop\Database

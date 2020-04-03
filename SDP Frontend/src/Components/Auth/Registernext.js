@@ -157,6 +157,7 @@ class Registernext extends React.Component {
             if (response.data.state) {
               localStorage.setItem("!@#$", this.props.username);
               localStorage.setItem("$#@!", response.data.id);
+              localStorage.setItem("ava", response.data.obj.avatar);
               this.props.successCreate(response.data.obj);
               this.props.history.push(`/profile/${this.props.username}`);
             }

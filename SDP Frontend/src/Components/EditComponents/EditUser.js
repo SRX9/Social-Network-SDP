@@ -93,6 +93,7 @@ class EditUser extends React.Component {
         }
         bodyFormData.append("userid", this.props.user._id);
         bodyFormData.append("username", this.state.username);
+        localStorage.setItem("!@#$",this.state.username);
         bodyFormData.append("fullname", this.state.fullname);
         bodyFormData.append("bio", this.state.bio);
         bodyFormData.append("country", this.state.country);

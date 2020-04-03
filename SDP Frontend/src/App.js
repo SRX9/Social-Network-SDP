@@ -88,7 +88,7 @@ class App extends React.Component {
           <Route
             path="/home"
             exact
-            component={() => <Home userobj={this.state.userobj} loadOn={this.loadOn}
+            render={() => <Home userobj={this.state.userobj} loadOn={this.loadOn}
               loadOff={this.loadOff} />}
           >
           </Route>
@@ -151,7 +151,6 @@ class App extends React.Component {
                   onClick={()=>this.changeColor(1)}
                     className={"pointer font-weight-bolder "+this.state.home }
                     type="home"
-                    fill
                     style={{
                       fontSize: "200%",
                       border: "10px solid white",

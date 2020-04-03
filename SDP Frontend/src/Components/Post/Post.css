@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Lobster+Two:700&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Comfortaa:700&display=swap');
+
 .postcard{
     margin: 10px;
     border-radius: 10px;
@@ -8,13 +9,14 @@
 }
 
 .time{
-    font-size:85%;
-    font-weight: 600;
+    font-size:90%;
+    font-weight: 500;
+    padding-top: 15px;
 }
 
 .username{
     color: black;
-    font-size: 116%;
+    font-size: 130%;
 }
 
 .saveicon{
@@ -46,19 +48,60 @@
 .texty{
     margin-left: 10px;
     margin-right: 10px;
-    font-size: 100%;
-    font-weight: 500;
+    font-size: 130%;
+    font-weight: 600;
     color: black;
 white-space:pre-line; 
 }
 
 .stannum{
-        font-size: 150%;
+        font-size: 170%;
+        font-weight: 400;
+        color: rgb(0, 177, 236);
+
+}
+
+
+.stan1{
+    font-size: 132%;
+    font-weight: 900;
     font-family: 'Comfortaa', cursive;
 }
-.stans{
-    font-size: 100%;
+
+.rr{
+    border-radius: 20px;
+}
+
+@keyframes example {
+  0%   {
+
+        font-size: 100%;
+    }
+  50%  {
+    font-size: 175%;}
+  100% {    
+    font-size: 140%;
+    }
+}
+
+.stan2{
+    animation-name: example;
+    animation-duration: 0.4s;
+        color: rgb(0, 177, 236);
+            font-size: 140%;
+    font-weight: 900;
     font-family: 'Comfortaa', cursive;
+}
+
+.myfont{
+        font-family: 'Comfortaa', cursive;
+
+}
+
+.reactall
+{
+    border-radius: 25px;
+    width: 40vw;
 }
 
 .divide{
@@ -75,12 +118,12 @@ white-space:pre-line;
 
 
 .myblue{
-    color: rgb(0, 172, 230);
+    color: rgb(0, 177, 236);
 }
 
 
 .reaction{
-        font-size: 110%;
+        font-size: 115%;
         letter-spacing: 0.5px;
 }
 
@@ -108,9 +151,10 @@ white-space:pre-line;
 
 
 .reacttext{
-    padding-left: 55px;
+    padding-left: 57px;
     margin-top: -10px;
     float: left;
+    font-size: 105%;
     letter-spacing: 0.4px;
 }
 
@@ -129,9 +173,38 @@ border-radius:0px 15px 25px 25px ;
 }
 .reactimagecenter img {
   height: auto;
+  max-height: 50vh;
 border-radius:0px 25px 25px 25px ;
   max-width: 100%;
   left: 50%;
   position: relative;
   transform: translateX(-50%);
+}
+
+
+.reactionvideo{
+    margin-top: 2px;
+  height: auto;
+  overflow-y: hidden;
+  border-radius: 0px 25px 25px;
+  background-color: white;
+}
+
+.audioreaction{
+    margin-top: 5px;
+    border-radius: 0 25px 25px;
+    background-color: rgb(243.8, 243.8, 243.8);
+}
+
+
+.temp1{
+    padding-bottom: 5px;
+    padding-top: 5px;
+    margin-bottom: 100px;
+}
+
+
+.line{
+    border: 0.5px solid lightgray;
+    width: 25vw;
 }

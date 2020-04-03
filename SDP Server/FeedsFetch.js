@@ -5,18 +5,11 @@ const { emailWelcomeGreet, emailOrName } = require('./Utilities');
 const bcrypt = require('bcryptjs');
 
 
-//moongoose setup
-mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://127.0.0.1:27017/ayefan', {
-    useCreateIndex: true,
-    useNewUrlParser: true
-});
-
 
 //mongod --dbpath C:\Users\SRx\Desktop\Database
 //Database models
 const {
-  FeedsModel,  UserModel, GroupModel, UserInbox, GroupInbox, GroupChats, PostModel, ReactionsModel, UserActionsModel, UserNetworkModel, UserTogroupModel
+ ReplyModel, FeedsModel,  UserModel, GroupModel, UserInbox, GroupInbox, GroupChats, PostModel, ReactionsModel, UserActionsModel, UserNetworkModel, UserTogroupModel
 } = require("./Models");
 
 router.get('/userfeeds',(req,res)=>{
@@ -33,4 +26,72 @@ router.get('/getpostdetails',(req,res)=>{
 })
 
 
+
+
+
+//get all reactions
+router.get('/getInitReaction',(req,res)=>{
+  ReactionsModel.find({ "postid": req.query.postid }).sort([['likes', -1],['replycount',-1]])
+    .limit(3)
+    .exec(function (err, docs) {
+      if(err)
+      {
+        res.send(false)
+      }
+      else{
+        res.send(docs)
+      }
+    });
+})
+
+
+router.get('/getChunkReactions',async (req,res)=>{
+  var postid=req.query.postid;
+  var skipid=req.query.resumeid;
+  ReactionsModel.find({ "postid": postid, "_id": { "$gt": skipid } }).sort([['likes', -1], ['replycount', -1]])
+    .limit(9)
+    .exec(function (err, docs) {
+      if (err) {
+        console.log(err)
+        res.send(false)
+      }
+      else {
+        res.send(docs)
+      }
+    });
+})
+
+
+//get all replies
+router.get('/getInitReplies', (req, res) => {
+  ReplyModel.find({ "reactionid": req.query.reactionid }).sort([['likes', -1]])
+    .limit(3)
+    .exec(function (err, docs) {
+      if (err) {
+        res.send(false)
+      }
+      else {
+        console.log(docs)
+        res.send(docs)
+      }
+    });
+})
+
+
+router.get('/getChunkReplies', async (req, res) => {
+  var reactionid = req.query.reactionid;
+  var skipid = req.query.resumeid;
+  console.log(reactionid,skipid)
+  ReplyModel.find({ "reactionid": reactionid, "_id": { "$gt": skipid } }).sort([['likes', -1]])
+    .limit(9)
+    .exec(function (err, docs) {
+      if (err) {
+        console.log(err)
+        res.send(false)
+      }
+      else {
+        res.send(docs)
+      }
+    });
+})
 module.exports = router;

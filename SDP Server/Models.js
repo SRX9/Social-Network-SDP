@@ -107,6 +107,7 @@ let PostModel=mongoose.model('Post',{
     streams:Number,    
     loves:Number,
     likes:Number,
+    firstreaction:{}
 });
 
 let ReactionsModel=mongoose.model('reaction',{
@@ -114,11 +115,27 @@ let ReactionsModel=mongoose.model('reaction',{
     userid:mongoose.Types.ObjectId,
     username:String,
     avatar:String,
+    type:Number,
+    verfiy:Number,
+    medialink:String,
+    time:Date,
     text:String,
-    reaction:String,
-    reply:[subArraySchema],
-    like:[subArraySchema]
+    likes:Number,
+    likesArray:[String],
+    replycount:Number,
 });
+
+
+let ReplyModel=mongoose.model('replies',{
+  reactionid: mongoose.Types.ObjectId,
+  userid: mongoose.Types.ObjectId,
+  type: Number,
+  time: Date,
+  text: String,
+  likes: Number,
+  likesArray: [String],
+})
+
 
 let LikeModel=mongoose.model('likes',{
   postid:mongoose.Types.ObjectId,
@@ -180,6 +197,7 @@ module.exports={
   StanModel:StanModel,
   SaveModel:SaveModel,
   ReactionsModel: ReactionsModel,
+  ReplyModel:ReplyModel,
 
   //General Model
   UserModel:UserModel,

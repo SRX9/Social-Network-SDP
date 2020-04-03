@@ -1,22 +1,35 @@
 const express = require("express");
 const router = express.Router();
-const mongoose = require('mongoose');
 const { search } = require("fast-fuzzy");
 const multer = require('multer');
 const uuidv1 = require('uuid/v1');
 const bcrypt = require('bcryptjs');
 let { fannet } = require('./Network');
 const {
-    LikeModel,LoveModel,StanModel,SaveModel, UserModel, GroupModel, UserInbox, GroupInbox, GroupChats, PostModel, ReactionsModel, UserActionsModel, UserNetworkModel, UserTogroupModel
+  ReplyModel, LikeModel,LoveModel,StanModel,SaveModel, UserModel, GroupModel, UserInbox, GroupInbox, GroupChats, PostModel, ReactionsModel, UserActionsModel, UserNetworkModel, UserTogroupModel
 } = require("./Models");
 
-mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://127.0.0.1:27017/ayefan', {
-    useCreateIndex: true,
-    useNewUrlParser: true
-});
 
 
+
+var attachStorage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/React')
+    },
+    filename: function (req, file, cb) {
+        let temp = uuidv1() + "" + file.originalname.trim();
+        cb(null, temp)
+    }
+})
+const attachUpload = multer({
+    storage: attachStorage,
+    limits: { fileSize: 157286400 },
+})
+
+
+
+
+//State of Post Stat
 router.get('/getstate',(req,res)=>{
     let postid=req.query.postid;
     let userid=req.query.userid;
@@ -60,7 +73,7 @@ router.get('/getstate',(req,res)=>{
 });
 
 
-
+//Like and Dislike
 router.put('/diskLikePost',(req,res)=>{
     LikeModel.update({ postid: req.body.postid }, {
         $pull: { "userid": req.body.userid }
@@ -101,7 +114,6 @@ router.put('/likePost', (req, res) => {
         }
         else {
             console.log(data, "liked post");
-            res.send(true)
         }
 
         //update number in post
@@ -129,6 +141,8 @@ router.put('/likePost', (req, res) => {
     });
 });
 
+
+//Heart and Break Heart
 router.put('/breakHeartPost', (req, res) => {
     LoveModel.update({ postid: req.body.postid }, {
         $pull: { "userid": req.body.userid }
@@ -163,14 +177,12 @@ router.put('/heartPost', (req, res) => {
             })
             newLoveModel.save().then((d) => {
                 console.log("created love model")
-                res.send(true)
             }).catch(e => {
                 console.log(e, "error creating love model")
             });
         }
         else {
             console.log(data, "loved post");
-            res.send(true)
         }
 
         //update number in post
@@ -191,7 +203,6 @@ router.put('/heartPost', (req, res) => {
             res.send(true);
         }).catch(e => {
             console.log(e, "dis like post error from heart");
-            res.send(false);
         });
     }).catch(e => {
         console.log(e, "love post error");
@@ -200,11 +211,33 @@ router.put('/heartPost', (req, res) => {
 });
 
 
+//Stan Post
 router.put('/stanPost', (req, res) => {
     console.log("Stanned post", req.body.userid, req.body.postid)
-    res.send(true)
+    StanModel.update({ postid: req.body.postid }, {
+        $push: { "userid": req.body.userid }
+    }).then(data => {
+
+        //Post Update stan
+        PostModel.findOne({ _id: req.body.postid }, (err, docs) => {
+            docs.streams = docs.streams + 1;
+            docs.save();
+        }).then((ok) => {
+            console.log("Stanned \n");
+            res.send(true)
+        }).catch(e => {
+            console.log(e, " Error in updating Stan of post model");
+            res.send(true)
+        });
+        console.log(data);
+    }).catch((e)=>{
+        console.log(e,"error inside stanning post");
+        res.send(true);
+    });
 });
 
+
+//Post Save
 router.put('/savePost', (req, res) => {
     console.log("Saved post", req.body.userid, req.body.postid)
     SaveModel.updateOne({ userid: req.body.userid }, {
@@ -247,4 +280,150 @@ router.put('/unsavePost', (req, res) => {
 });
 
 
+//Reaction **************************************
+
+//Get Reaction state per user
+router.get('/getReactionstate',(req,res)=>{
+    ReactionsModel.findOne({ _id: req.query.reactionid, "likesArray": req.query.userid },(err,doc)=>{
+        if(doc===null)
+        {
+            res.send(false);
+        }
+        else{
+            res.send(true)
+        }
+    })
+})
+
+//Get Reply State per user
+router.get('/getReplystate', (req, res) => {
+    ReplyModel.findOne({ _id: req.query.replyid, "likesArray": req.query.userid }, (err, doc) => {
+        if (doc === null) {
+            res.send(false);
+        }
+        else {
+            res.send(true)
+        }
+    })
+})
+
+
+//Reaction Post
+router.put('/uploadReaction', attachUpload.array('file', 1),(req,res)=>{
+        let link="";
+        if(req.files[0]!==undefined)
+        { 
+            link = "http://localhost:3001/" + req.files[0].path.replace(new RegExp(/\\/g), '/');
+        }
+        let newReaction=new ReactionsModel({
+            medialink:link,
+            postid:req.body.postid,
+            userid:req.body.userid,
+            time:req.body.time,
+            username:req.body.username,
+            avatar: req.body.avatar,
+            text: req.body.msg,
+            reply: [],
+            likesArray: [],
+            likes:0,
+            type:req.body.type
+        });
+        newReaction.save().then(doc=>{
+            PostModel.findOne({ _id: req.body.postid }, (err, docs) => {
+                docs.reactionNo = docs.reactionNo + 1;
+                docs.save();
+            }).then((ok) => {
+                console.log("Postmodel reaction")
+                res.send({ stat: true, obj: doc });
+            }).catch(e=>{
+                console.log(e,"error in reactionNo++ inside create Reaction")
+            })
+        },e=>{
+            console.log(e,"error in Creating reaction")
+            res.send({stat:false,obj:null})
+        });
+});
+//Like reaction
+router.put('/likeReaction',(req,res)=>{
+    ReactionsModel.updateOne({ _id: req.body.reactionid }, {
+        $push: { "likesArray": req.body.userid},
+        $inc: {"likes": 1 } 
+    }).then(data => {
+        console.log(data,"Liked Reaction")
+        res.send(true)
+    }).catch(e=>{
+        console.log(e,"Inside like Reaction Post")
+        res.send(true)
+    })
+});
+
+//dislike Reaction
+router.put('/dislikeReaction', (req, res) => {
+    ReactionsModel.updateOne({ _id: req.body.reactionid }, {
+        $pull: { "likesArray": req.body.userid },
+        $inc: { "likes": -1 }
+    }).then(data => {
+        console.log(data, "DisLiked Reaction");
+        res.send(true);
+    }).catch(e => {
+        console.log(e,"inside dis like reaction")
+        res.send(true)
+    })
+});
+
+//Reply TO Reaction
+router.post('/uploadReply',(req, res) => {
+
+    let newReply = new ReplyModel({
+        reactionid: req.body.reactionid,
+        userid: req.body.userid,
+        time:req.body.date,
+        text: req.body.text,
+        likesArray: [],
+        likes: 0,
+        type: 1
+    });
+    newReply.save().then(doc => {
+        ReactionsModel.findOne({ _id: req.body.reactionid }, (err, docs) => {
+            docs.replycount = docs.replycount + 1;
+            docs.save();
+        }).then((ok) => {
+            console.log("Reaction model reply")
+            res.send({ stat: true, obj: doc });
+        }).catch(e => {
+            console.log(e, "error in replies No++ inside create Reply")
+        })
+    }, e => {
+        console.log(e, "error in Creating reply ")
+        res.send({ stat: false, obj: null })
+    });
+});
+
+//Like reaction reply
+router.put('/likeReply', (req, res) => {
+    ReplyModel.updateOne({ _id: req.body.replyid }, {
+        $push: { "likesArray": req.body.userid },
+        $inc: { "likes": 1 }
+    }).then(data => {
+        console.log(data, "Liked Reply")
+        res.send(true)
+    }).catch(e => {
+        console.log(e, "Inside like Reply Post")
+        res.send(true)
+    })
+});
+
+//dislike Reaction reply
+router.put('/dislikeReply', (req, res) => {
+    ReplyModel.updateOne({ _id: req.body.replyid }, {
+        $pull: { "likesArray": req.body.userid },
+        $inc: { "likes": -1 }
+    }).then(data => {
+        console.log(data, "DisLiked Reply");
+        res.send(true);
+    }).catch(e => {
+        console.log(e, "inside dis like reply")
+        res.send(true)
+    })
+});
 module.exports = router;
