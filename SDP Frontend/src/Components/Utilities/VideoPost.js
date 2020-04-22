@@ -1,11 +1,12 @@
 import React from "react";
-import { Row, Col, Modal, Button, Radio, Icon, message } from "antd";
+import { Row, Col, Modal, Button, Radio, Icon, Typography, message, Progress } from "antd";
 import "./utilities.css";
 import { MdCrop } from "react-icons/md";
 import axios from "axios";
 import SRtext from "./SRtext";
 import uniqid from "uniqid";
 import VideoPlayer from "../Videoplayer/VideoPlayer";
+const { Text, Title } = Typography;
 
 const posture = require("../video.png");
 
@@ -13,6 +14,9 @@ class VideoPost extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      percent:0,
+      uploaded:true,
+      small:true,
       videoload: false,
       videoUrl: null,
       videoObj: null,
@@ -33,6 +37,19 @@ class VideoPost extends React.Component {
   }
 
   upload = () => {
+    this.setState({percent:0,uploaded:false})
+    const config = {
+      onUploadProgress: (progressEvent) => {
+        var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+        this.setState({percent:percentCompleted},()=>{
+          if(percentCompleted===100)
+          {
+            this.setState({uploaded:true})
+          }
+        });
+      }
+    }
+
     if (this.state.placeholder && this.state.videoUrl === null && this.state.videoObj===null) {
       message.warning("Select a Video to Post!", 1);
       return;
@@ -42,7 +59,7 @@ class VideoPost extends React.Component {
     var bodyFormData = new FormData();
     var vid = this.state.videoObj;
     bodyFormData.append("vid", vid);
-    bodyFormData.append("userid", obj._id);
+    bodyFormData.append("userid", localStorage.getItem("$#@!"));
     bodyFormData.append("username", obj.username);
     bodyFormData.append("fullname", obj.fullname);
     bodyFormData.append("avatar", obj.avatar);
@@ -52,7 +69,7 @@ class VideoPost extends React.Component {
     bodyFormData.append("visible", this.state.visible);
     bodyFormData.append("reactionStat", this.state.reactionStat);
     axios
-      .put("http://localhost:3001/createpost/uploadVideoPost", bodyFormData)
+      .put("http://localhost:3001/createpost/uploadVideoPost", bodyFormData, config)
       .then(res => {
         if (res.data.stat) {
           this.setState({ loading: false });
@@ -71,10 +88,24 @@ class VideoPost extends React.Component {
         console.log(err)});
   };
 
+  setRunTime=async(file)=>{
+
+    let blobURL = URL.createObjectURL(file);
+    var video = document.createElement("video");
+    video.preload = "metadata";
+    video.src = URL.createObjectURL(file);
+    video.onloadedmetadata = async () => {
+      window.URL.revokeObjectURL(blobURL);
+      if (video.duration < 211) {
+        this.setState({ player: 2 });
+      }
+    }
+  }
+
   _handleVideoChange = async e => { 
     if (!this.state.placeholder ||this.state.videoObj!==null || this.state.videoUrl!==null)
     {
-      this.setState({placeholder:true},()=>{
+      this.setState({ placeholder: true, videoload: true},()=>{
         this.setState({ videoObj: null, videoUrl: null })
       })
     }
@@ -86,42 +117,28 @@ class VideoPost extends React.Component {
       this.setState({ videoload: true });
       const reader = new FileReader();
       let file = e.target.files[0];
-      if (file.size > 157286400) {
-        message.warning("Video Size Should be less than 150MB!", 4);
-        this.setState({ videoload: false });
+      this.setRunTime(file);
+      if (file.size > 1181116008)
+      {
+        message.warning("Maximum Video Size Should be less than 1.1Gb!",4);
+        this.setState({ placeholder: true, videoload: false })
         return;
       }
-      let blobURL = URL.createObjectURL(file);
-      var video = document.createElement("video");
-      video.preload = "metadata";
-      video.src = URL.createObjectURL(file);
-      video.onloadedmetadata = async () => {
-        window.URL.revokeObjectURL(blobURL);
-        if(video.duration<211)
-        {
-          this.setState({player:2});
-        }
-        if (video.duration > 1801) {
-          message.warning(
-            "Video Duration should be less than 30 Minutes!",
-            3
-          );
-          this.setState({ videoload: false });
-          return;
-        }
-        else{
-         reader.addEventListener("load",async () =>
-           this.setState({ videoUrl: reader.result, videoObj: file }, () => {
-              setTimeout(() => {
-                this.setState({ placeholder: false, videoload: false });
-              }, 100);
-            })
+      else{
+        if (file.size > 209715201) {
+          reader.addEventListener("load", () =>
+            this.setState({ small: false, videoObj: file, placeholder: false, videoload: false })
           );
         }
-      };
+        else {
+          reader.addEventListener("load", () =>{
+            this.setState({small:true, videoUrl: reader.result, videoObj: file, placeholder: false, videoload: false })
+          })
+        }
+      }
       reader.readAsDataURL(e.target.files[0]);
     } else {
-      message.warning("Max 1 Video Allowed!", 2);
+      message.warning("Maximum 1 Video Allowed!", 2);
     }
     
   };
@@ -132,7 +149,7 @@ class VideoPost extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="bg-light">
         <Row type="flex" justify="center">
           <Col
             span={13}
@@ -204,16 +221,20 @@ class VideoPost extends React.Component {
                   </form>
                 </span>
                 <div className="text-center pb-3">
-                  <VideoPlayer
-                    className="p-2 text-center"
-                    video={this.state.videoUrl}
-                    play={this.props.stop}
-                    style={{
-                      width: "auto",
-                      maxHeight: "30vw",
-                      height: "auto"
-                    }}
-                  />
+                    {this.state.small ? <VideoPlayer
+                      className="p-2 text-center"
+                      video={this.state.videoUrl}
+                      play={this.props.stop}
+                      style={{
+                        width: "auto",
+                        maxHeight: "30vw",
+                        height: "auto"
+                      }}
+                    />:<div className="pt-4 p-5">
+                      <h5 strong className="text-dark">{this.state.videoObj.name}</h5>
+                      <h6 className="text-success pt-3"><span className="font-weight-bold">&#10003;</span>	 Selected</h6>
+                      <Text className="myblue">Note:</Text> <Text className="text-black-50">As Video size is big, Browser not able to show preview.</Text>
+                    </div>}
                 </div>
               </div>
             )}
@@ -250,16 +271,23 @@ class VideoPost extends React.Component {
               </Radio.Group>
             </div>
             <div className="pt-4 text-left">
-              <Button
-                loading={this.state.loading}
-                onClick={this.upload}
-                size="large"
-                className="w-100"
-                type="primary"
-              >
-                Post
-                <Icon type="double-right" />{" "}
+              {this.state.uploaded?
+                <Button
+                  loading={this.state.loading}
+                  onClick={this.upload}
+                  size="large"
+                  className="w-100"
+                  type="primary"
+                >
+                  Post
               </Button>
+              :
+              <div className="text-center">
+                  <h6 className="text-center">Posting...</h6>
+                  <Progress percent={this.state.percent} status="active" />
+                </div>
+
+              }
             </div>
           </Col>
         </Row>

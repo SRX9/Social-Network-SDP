@@ -218,7 +218,7 @@ class Profile extends React.Component
                   <Row align="center">
                     <div className="">
                       <Row className="">
-                        <Col className="bg-transparent" span={10}>
+                        <Col flex="auto" className="bg-transparent" span={9}>
                           <Button
                             shape="circle"
                             size="default"
@@ -242,18 +242,18 @@ class Profile extends React.Component
                           :null}
 
                         </Col>
-                        <Col span={4} className="text-center">
+                        <Col flex="auto" className="text-center">
                               <div
                                 style={{
-                                  fontSize: "180%",
+                                  fontSize: "160%",
                                   fontWeight: "600",
                                 }}
-                                className="text-dark shadow-4 pronav fixed-top ayefan"
+                                className="text-dark p-1 shadow-4 pronav fixed-top ayefan"
                               >
-                                ayefan
+                                {this.state.userObj.username}
                               </div>
                         </Col>
-                        <Col className="bg-transparent" span={10} >
+                        <Col flex="auto" className="bg-transparent float-right text-right" span={9} >
                                 {this.state.homeornot?
                             <div>
                               <Button

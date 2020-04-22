@@ -24,9 +24,9 @@ class VideoPlayer extends React.Component
     {
         return (
           <div className=" text-center">
-            <video preload={true} className="nolink" controls autoPlay={this.state.play} disablePictureInPicture controlsList="nodownload">
-              <source src={this.props.video} type="video/mp4" />
-              <source src={this.props.video} type="video/ogg" />
+            <video preload="metadata" className="nolink" controls autoPlay={this.state.play} disablePictureInPicture controlsList="nodownload">
+              <source src={this.props.video +"#t=4"} type="video/mp4" />
+              <source src={this.props.video + "#t=4"} type="video/ogg" />
             </video>
           </div>
         );

@@ -5,15 +5,30 @@ const { search } = require("fast-fuzzy");
 const multer = require('multer');
 const uuidv1 = require('uuid/v1');
 const bcrypt = require('bcryptjs');
-let {fannet} =require('./Network');
+var Graph = require("graphlib").Graph;
+var fannet = new Graph({ directed: true, compound: true, multigraph: true });
 const {
     UserModel, GroupModel, UserInbox, GroupInbox, GroupChats, PostModel, ReactionsModel, UserActionsModel, UserNetworkModel, UserTogroupModel
 } = require("./Models");
 
 
-//mongod --dbpath C:\Users\SRx\Desktop\Database
-//fan-in
+//Set Nodes
+UserModel.find({}, "_id username fullname avatar verify ", (err, docs) => {
+    docs.map(obj => {
+        fannet.setNode(obj._id, obj);
+    });
+});
 
+UserNetworkModel.find({}, "userid fanins", (err, docs) => {
+    docs.map(userfans => {
+        userfans.fanins.map(stars => {
+            fannet.setEdge(userfans.userid, stars);
+        });
+    })
+})
+setTimeout(() => {
+    console.log(fannet.edges())
+}, 1500)
 
 router.put('/fanin',(req,res)=>{
     var star=req.body.star;
@@ -79,4 +94,4 @@ router.put('/fanout', (req, res) => {
 });
 
 
-module.exports = router;
+module.exports ={router:router,fannet:fannet};

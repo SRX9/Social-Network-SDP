@@ -17,6 +17,7 @@
     "express": "^4.17.1",
     "fast-fuzzy": "^1.9.1",
     "flexsearch": "^0.6.32",
+    "fuse.js": "^3.4.3",
     "graphlib": "^2.1.8",
     "install": "^0.13.0",
     "mongoose": "^5.8.7",

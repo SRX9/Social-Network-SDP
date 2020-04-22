@@ -29,6 +29,7 @@ router.get('/getUserProfileInit',(req,res)=>{
     UserModel.findOne({ _id: req.query.userid },"username fullname avatar verify" ,function (err, docs) {
         if (err === null) {
             res.send(docs);
+            console.log(docs)
         }
         else {
             res.send(false);

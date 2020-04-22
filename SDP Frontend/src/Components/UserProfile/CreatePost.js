@@ -51,28 +51,24 @@ class CreatePost extends React.Component
               <div className="">
                 <Row className="">
                   <Col xs={24}>
-                    <div class="row border-bottom nav justify-content-center p-1 text-center">
-                      <div class="col-md-auto">
-                        <span
-                          style={{
-                            fontSize: "1.4rem",
-                            fontWeight: "600"
-                          }}
-                          className="text-dark"
-                        >
-                          ayefan
-                        </span>
-                      </div>
+                    <div
+                      style={{
+                        fontSize: "180%",
+                        fontWeight: "600",
+                      }}
+                      className="text-dark d-inline-block shadow-4 name  text-center   overflow-hidden text-break fixed-top ayefan"
+                    >
+                      ayefan
                     </div>
                   </Col>
                 </Row>
               </div>
             </Row>
-            <div className=" text-center">
+            <div className=" text-center mt-5 pt-3">
               <Row type="flex" justify="center">
                 <Col
                   span={20}
-                  className="bg-white pb-4"
+                  className="bg-light border pb-4"
                   style={{ borderRadius: "20px", minHeight: "380px" }}
                 >
                   <Tabs

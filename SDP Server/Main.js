@@ -32,7 +32,7 @@ app.use("/data", DataFetchrouter);
 app.use("/search", Searchrouter);
 app.use("/createpost",PostCreateRouter);
 app.use("/edit", EditRouter);
-app.use("/network", NetworkRouter);
+app.use("/network", NetworkRouter.router);
 app.use("/feeds", FeedsRouter);
 app.use("/feedstat", FeedStat);
 

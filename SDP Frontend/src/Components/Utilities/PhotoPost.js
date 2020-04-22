@@ -12,19 +12,18 @@ import uniqid from 'uniqid';
 
 const posture =require('../photo.png');
 const params = {
-  grabCursor: true,
-
-    pagination: {
-      el: ".swiper-pagination",
-    hide: false,
-        clickable: true
-    },
-    navigation: {
-      nextEl: ".swiper-button-next",
-      prevEl: ".swiper-button-prev"
-    },
-    spaceBetween: 30
-  };
+  autoHeight: true,
+  spaceBetween: 0,
+  pagination: {
+    el: '.swiper-pagination',
+    dynamicBullets: true,
+    clickable: true,
+  },
+  navigation: {
+    nextEl: '.swiper-button-next',
+    prevEl: '.swiper-button-prev',
+  },
+};
 
 class PhotoPost extends React.Component {
   constructor(props) {
@@ -121,7 +120,7 @@ class PhotoPost extends React.Component {
   _handleImageChange =async e => {
     e.preventDefault();
 
-    if (e.target.files && e.target.files.length > 0 && e.target.files.length < 11) {
+    if (e.target.files && e.target.files.length > 0 && e.target.files.length < 16) {
       let temp=[];
       this.setState({imgload:true})
       for(let i=0;i<e.target.files.length;i++)
@@ -142,7 +141,7 @@ class PhotoPost extends React.Component {
       });
     }
     else{
-      message.warning('Max 10 Images Allowed!',2);
+      message.warning('Max 15 Images Allowed!',2);
     }
   };
 
@@ -227,7 +226,6 @@ class PhotoPost extends React.Component {
           <Col
             span={13}
             className="bg-white bor border m-2"
-            style={{ Height: "30vh" }}
           >
             {this.state.placeholder ? (
               !this.state.imgload ? (
@@ -266,53 +264,98 @@ class PhotoPost extends React.Component {
                  className="shadow" type="default" shape="round">
                   <Icon type="delete" /> All
                 </Button>
-
-                <Swiper {...params}>
-                  {this.state.arr.map((obj, index) => (
-                    <div className="text-center pb-3">
-                      <span className="text-left">
-                        <span
-                          onClick={() => this.cropopen(index)}
-                          className="float-right"
-                        >
-                          <Button shape="circle" type="primary">
-                            <MdCrop
-                              style={{ fontSize: "1.2rem" }}
-                              className="pt-1"
+                <div >
+                  {this.state.arr.length===1?
+                      <div className="text-center pb-3 p-3 ">
+                        <span className="text-left">
+                          <span
+                            onClick={() => this.cropopen(0)}
+                            className="float-right"
+                          >
+                            <Button shape="circle" type="primary">
+                              <MdCrop
+                                style={{ fontSize: "1.2rem" }}
+                                className="pt-1"
+                              />
+                            </Button>
+                          </span>
+                          <form>
+                            <label for={`file-input${0}`}>
+                              <div className="p-1 m-1 pl-2 bor dim shadow-1 pr-2 shadow pointer ">
+                                <Icon type="reload" />
+                              </div>
+                            </label>
+                            <input
+                              id={`file-input${0}`}
+                              className={`file-input${0}`}
+                              type="file"
+                              name="img"
+                              accept=".jpg, .jpeg, .png"
+                              multiple={false}
+                              style={{ display: "none" }}
+                              onChange={e => this.change(e, 0)}
                             />
-                          </Button>
+                          </form>
                         </span>
-                        <form>
-                          <label for={`file-input${index}`}>
-                            <div className="p-1 m-1 pl-2 bor dim shadow-1 pr-2 shadow pointer ">
-                              <Icon type="reload" />
-                            </div>
-                          </label>
-                          <input
-                            id={`file-input${index}`}
-                            className={`file-input${index}`}
-                            type="file"
-                            name="img"
-                            accept="image/*"
-                            multiple={false}
-                            style={{ display: "none" }}
-                            onChange={e => this.change(e, index)}
+                        <img
+                          src={this.state.arr[0].imgurl}
+                          className="pt-1 pl-2 pr-2 pb-2 tc text-center  "
+                          style={{
+                            borderRadius: "15px",
+                            width: "80%",
+                            height: "auto"
+                          }}
+                        />
+                      </div>
+                  :
+                    <Swiper {...params}>
+                      {this.state.arr.map((obj, index) => (
+                        <div className="text-center">
+                          <span className="text-left">
+                            <span
+                              onClick={() => this.cropopen(index)}
+                              className="float-right"
+                            >
+                              <Button shape="circle" type="primary">
+                                <MdCrop
+                                  style={{ fontSize: "1.2rem" }}
+                                  className="pt-1"
+                                />
+                              </Button>
+                            </span>
+                            <form>
+                              <label for={`file-input${index}`}>
+                                <div className="p-1 m-1 pl-2 bor dim shadow-1 pr-2 shadow pointer ">
+                                  <Icon type="reload" />
+                                </div>
+                              </label>
+                              <input
+                                id={`file-input${index}`}
+                                className={`file-input${index}`}
+                                type="file"
+                                name="img"
+                                accept="image/*"
+                                multiple={false}
+                                style={{ display: "none" }}
+                                onChange={e => this.change(e, index)}
+                              />
+                            </form>
+                          </span>
+                          <img
+                            src={obj.imgurl}
+                            className="pt-1 pl-2 pr-2 pb-2 tc text-center  "
+                            style={{
+                              borderRadius: "15px",
+                              width: "auto",
+                              height: "auto",
+                              maxHeight:"55vh"
+                            }}
                           />
-                        </form>
-                      </span>
-                      <img
-                        src={obj.imgurl}
-                        className="pt-1 pl-2 pr-2 pb-2 tc text-center  "
-                        style={{
-                          borderRadius: "15px",
-                          width: "auto",
-                          maxHeight: "30vw",
-                          height: "auto"
-                        }}
-                      />
-                    </div>
-                  ))}
-                </Swiper>
+                        </div>
+                      ))}
+                </Swiper>}
+                  </div>
+
               </div>
             )}
           </Col>

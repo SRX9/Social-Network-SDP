@@ -14,6 +14,8 @@ import CreatePost from './Components/UserProfile/CreatePost';
 import VideoPlayer from './Components/Videoplayer/VideoPlayer';
 import Home from './Components/Home';
 import Main from './Components/Main';
+import SearchStuff from './Components/Content/SearchStuff';
+
 class App extends React.Component {
   state={
     loading:false,
@@ -83,7 +85,7 @@ class App extends React.Component {
   render()
   {
     return (
-      <Router>
+      <Router >
         <Switch>
           <Route
             path="/home"
@@ -108,6 +110,11 @@ class App extends React.Component {
             path="/createaccount"
             exact
             component={() => <Register setHomeUser={this.setHomeUser} />}
+          ></Route>
+          <Route
+            path="/search"
+            exact
+            component={() => <SearchStuff/>}
           ></Route>
           <Route
             path="/profile/:username"
@@ -143,6 +150,8 @@ class App extends React.Component {
           ) : (
             <div className="nobar"></div>
           )}
+
+
           <div className="text-center pt-1  border  bg-white" >
             <Row type="flex" gutter={15} className="mb-1" justify="center" align="middle">
               {this.state.loggedIn ?<Col >
@@ -160,6 +169,7 @@ class App extends React.Component {
               </Link>
               </Col>:null}
               <Col >
+              
               <Link to="/search">
                   <Icon
                     onClick={()=>this.changeColor(2)}
@@ -173,6 +183,7 @@ class App extends React.Component {
                   />{" "}
               </Link>
               </Col>
+              
               {this.state.loggedIn ? (
                 <Col >
                   <Link to={`/profile/${localStorage.getItem("!@#$")}/create`}>

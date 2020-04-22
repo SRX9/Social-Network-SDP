@@ -215,7 +215,7 @@ class CreateReaction extends React.Component
                         </div>
                         {this.state.type===2?
                         <div className="text-center" >
-                            <img  src={this.state.fileurl} className="img-fluid rr reactimage" />
+                            <img  src={this.state.fileurl} className="rr reactimage" />
                         </div>
                         :this.state.type==3?
                         <div className="text-center" >

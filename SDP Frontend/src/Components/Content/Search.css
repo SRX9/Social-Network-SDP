@@ -1,0 +1,9 @@
+.searchBox{
+    min-height: 80vh;
+}
+
+.inshadow {
+   -moz-box-shadow:    inset 0px -100px 120px -45px  deepskyblue;
+   -webkit-box-shadow: inset 0px -100px 120px -45px  deepskyblue;
+   box-shadow:         inset 0px -100px 120px -45px  deepskyblue;
+}

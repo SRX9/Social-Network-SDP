@@ -5,7 +5,6 @@ const { emailWelcomeGreet, emailOrName } = require('./Utilities');
 const bcrypt = require('bcryptjs');
 const multer = require('multer');
 const uuidv1 = require('uuid/v1');
-let { fannet } = require('./Network');
 
 
 
@@ -20,7 +19,7 @@ var PhotoPostStorage = multer.diskStorage({
 })
 const PhotoPostUpload = multer({
     storage: PhotoPostStorage,
-    limits: { fileSize: 157286400 },
+    limits: { fileSize: 257286400 },
 })
 var VideoPostStorage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -33,7 +32,7 @@ var VideoPostStorage = multer.diskStorage({
 })
 const VideoPostUpload = multer({
     storage: VideoPostStorage,
-    limits: { fileSize: 157286400 },
+    limits: { fileSize: 1181116010 },
 })
 var AudioPostStorage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -67,11 +66,10 @@ const {
 
 function NotifyAll(id,postid)
 {
-    console.log(id,postid);
-    
+    let obj = require('./Fannetwork');
+    let fannet=obj.fannet;
     let fans=fannet.inEdges(id);
-    console.log(fans);
-    console.log(fans,"asdsadsad")
+    console.log(fans,"ganeshasdsad");
     fans.map(fanid=>{
         FeedsModel.updateOne({ userid:mongoose.Types.ObjectId(fanid.v) },
             {
@@ -112,7 +110,7 @@ router.put('/uploadPhotoPost', PhotoPostUpload.array('img', 10),(req,res)=>{
     var file = req.files;
     let links=[];
     for (var i = 0; i < file.length; i++) {
-        links.push(file[i].path);
+        links.push("http://localhost:3001/" + file[i].path.replace(new RegExp(/\\/g), '/'));
     }
     let tag=[];
     let user=[];
@@ -145,8 +143,8 @@ router.put('/uploadPhotoPost', PhotoPostUpload.array('img', 10),(req,res)=>{
         reactionStat: req.body.reactionStat,
         streams: 0,
         reactionNo:0,
-        love:0,
-        like:0
+        loves: 0,
+        likes: 0
     })
 
     newPost.save().then((doc)=>{
@@ -166,7 +164,7 @@ router.put('/uploadPhotoPost', PhotoPostUpload.array('img', 10),(req,res)=>{
 
 //VideoPost
 router.put('/uploadVideoPost', VideoPostUpload.array('vid',1), (req, res) => {
-    let link=req.files[0].path;
+    let link="http://localhost:3001/" + req.files[0].path.replace(new RegExp(/\\/g), '/');
     let tag = [];
     let user = [];
     let group = [];
@@ -188,6 +186,7 @@ router.put('/uploadVideoPost', VideoPostUpload.array('vid',1), (req, res) => {
         type: 3,
         text: req.body.text,
         hashtags: tag,
+        player: req.body.playerType,
         usertags: user,
         videoLink:link,
         grouptags: group,
@@ -195,8 +194,8 @@ router.put('/uploadVideoPost', VideoPostUpload.array('vid',1), (req, res) => {
         reactionStat: req.body.reactionStat,
         streams: 0,
         reactionNo: 0,
-        love: 0,
-        like: 0
+        loves: 0,
+        likes: 0
     })
 
     newPost.save().then((doc) => {
@@ -220,7 +219,7 @@ router.put('/uploadAudioPost', AudioPostUpload.array('aud', 2), (req, res) => {
     var file = req.files;
     let links = [];
     for (var i = 0; i < file.length; i++) {
-        links.push(file[i].path);
+        links.push("http://localhost:3001/" + file[i].path.replace(new RegExp(/\\/g), '/'));
     }
     let tag = [];
     let user = [];
@@ -252,8 +251,8 @@ router.put('/uploadAudioPost', AudioPostUpload.array('aud', 2), (req, res) => {
         reactionStat: req.body.reactionStat,
         streams: 0,
         reactionNo: 0,
-        love: 0,
-        like: 0
+        loves: 0,
+        likes: 0
     })
 
     newPost.save().then((doc) => {

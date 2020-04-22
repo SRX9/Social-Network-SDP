@@ -2,7 +2,23 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require('mongoose');
 const { search } = require("fast-fuzzy");
-
+const Fuse =require('fuse.js');
+const options = {
+  isCaseSensitive: false,
+  findAllMatches: false,
+  includeMatches: false,
+  includeScore: false,
+  useExtendedSearch: false,
+  minMatchCharLength: 1,
+  shouldSort: true,
+  threshold:0.5,
+  location: 0,
+  distance: 100,
+  keys: [
+    "name",
+    "fullname"
+  ]
+};
 
 //mongod --dbpath C:\Users\SRx\Desktop\Database
 //Database models
@@ -10,25 +26,28 @@ const {
     UserModel, GroupModel, UserInbox, GroupInbox, GroupChats, PostModel, ReactionsModel, UserActionsModel, UserNetworkModel, UserTogroupModel
 } = require("./Models");
 
-function initBuffers(){
-  
-}
+let usersBuffer = [];
 
-let usersBuffer = [
-  {
-    name: "raj",
-    avatar:
-      "https://www.biography.com/.image/t_share/MTE4MDAzNDEwNzMzODYwMzY2/robert-downey-jr-9542052-1-402.jpg",
-    verified: true
-  },
-  {
-    name: "robert Downey",
-    avatar:
-      "https://www.biography.com/.image/t_share/MTE4MDAzNDEwNzMzODYwMzY2/robert-downey-jr-9542052-1-402.jpg",
-    verified: true
-  }
-];
-let tagsBuffer = [{
+function initBuffers(){
+  UserModel.find({},"username fullname coverPhoto verify avatar",(err,docs)=>{
+    docs.map(obj=>{
+      usersBuffer.push({
+        name: obj.username,
+        verified:obj.verify,
+        avatar:obj.avatar,
+        fullname:obj.fullname,
+        cover: obj.coverPhoto
+      })
+    })
+  })
+}
+let fuse;
+initBuffers()
+setTimeout(()=>{
+  fuse = new Fuse(usersBuffer, options);
+  //console.log(usersBuffer)
+},1500)
+let stagsBuffer = [{
   by: "raj",
   name:"lola",
   avatar:
@@ -65,7 +84,6 @@ let groupBuffer = [
 ];
 
 router.get('/tag', (req, res) => {
-  console.log(search(req.query.tag, tagsBuffer, { keySelector: (obj) => obj.name }).slice(0, 5))
   res.send(search(req.query.tag,tagsBuffer, { keySelector: (obj) => obj.name }).slice(0, 5));
 });
 
@@ -77,6 +95,13 @@ router.get("/group", (req, res) => {
       search(req.query.group, groupBuffer, { keySelector: obj => obj.name }).slice(0,5)
     );
 });
+
+
+//Search
+//Users
+router.get('/finduser',(req,res)=>{
+  res.send(fuse.search(req.query.token).slice(0,20))
+})
 
 
 module.exports = router;

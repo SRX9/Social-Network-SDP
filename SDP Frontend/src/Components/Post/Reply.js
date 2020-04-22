@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import './Post.css';
-import { Row, Col, Avatar, Typography, Icon, Space, message, Divider, Dropdown, Skeleton } from 'antd';
+import { Row, Col, Avatar, Typography, Icon, Space,Skeleton, message, Divider, Dropdown } from 'antd';
 import TimeAgo from 'javascript-time-ago'
 import { Link } from 'react-router-dom';
 import en from 'javascript-time-ago/locale/en'
@@ -19,7 +19,6 @@ import Loader from 'react-loader-spinner'
 import { IoMdMore } from "react-icons/io";
 import Drawer from 'react-drag-drawer';
 import Option from './Options';
-import ReplyList from './ReplyList';
 
 TimeAgo.addLocale(en);
 const timeAgo = new TimeAgo('en-US');
@@ -27,13 +26,13 @@ const { Text, Title } = Typography;
 const serverUrl = "http://localhost:3001/";
 
 
-class Reaction extends React.Component {
+class Reply extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
             youreply: null,
-            delid:null,
+            delid: null,
             replycount: this.props.obj.replycount,
             reaction: this.props.obj,
             replies: [],
@@ -49,6 +48,7 @@ class Reaction extends React.Component {
             likeColor: "",
             caption: "",
             loading: false,
+            home:localStorage.getItem("$#@!")===this.props.obj.userid,
             avatar: localStorage.getItem("ava") === undefined ? "http://localhost:3001/AF.png" : localStorage.getItem("ava")
         }
     }
@@ -265,7 +265,7 @@ class Reaction extends React.Component {
                     temp.unshift(res.data.obj);
                     let obj = this.state.reaction;
                     obj.replycount++;
-                    this.setState({ replies: temp, youreply: res.data.obj,replycount:this.state.replycount++, reaction: obj, replyload: false, replyopen: false })
+                    this.setState({ replies: temp, youreply: res.data.obj, replycount: this.state.replycount++, reaction: obj, replyload: false, replyopen: false })
                 }
             })
             .catch((error) => {
@@ -275,32 +275,15 @@ class Reaction extends React.Component {
 
     }
 
-    showreplies = () => {
-        if (this.state.replies.length !== 0) {
-            this.setState({ closereply: false, repliesLoading: false, showreplies: false });
-            return;
-        }
-        this.setState({ repliesLoading: true })
-        axios.get(`${serverUrl}feeds/getInitReplies?reactionid=${this.props.obj._id}`).then((response) => {
-            if (response.data.length === this.state.reaction.replycount) {
-                this.setState({ finish: true })
-            }
-            this.setState({ replies: response.data, closereply: false, repliesLoading: false, showreplies: false })
-        }).catch(e => {
-            this.setState({ repliesLoading: false, showreplies: false })
-            message.warning("Unable fetch Replies!! Server Down.", 3)
-        })
-    }
-
-    updateReaction=(count,list)=>{
-        this.setState({ reaction:count,replies:list })
+    openoptions = (id) => {
+        this.props.openoptions(id);
     }
 
     render() {
 
             const obj = this.state.reaction;
             return (
-            <Skeleton loading={this.state.loading} active avatar className="p-3  mr-5">
+                <Skeleton loading={this.state.loading} avatar active>
                     <div className="mb-3 text-left  ">
                         <Row justify="space-around" className="p-1" align="middle">
                             <Col span={12} className="text-left p-2">
@@ -339,57 +322,30 @@ class Reaction extends React.Component {
                                             <this.state.likeState onClick={this.like} className={this.state.likeColor + " grow "} />
                                         </div>
                                     </Col>
-                                    {this.props.first !== true ? <Col flex="auto">
+                                    {this.state.home?<Col flex="auto">
                                         <IoMdMore onClick={() => this.props.openoptions(obj._id)} className=" pointer float-right" style={{ fontSize: "160%", }} />
-                                    </Col> : null}
+                                    </Col>:null}
                                 </Row>
                             </Col>
                         </Row>
                         <Row    >
                             <Col xs={24} className="reacttext">
                                 <div>
-                                    <Text strong className="text-black" style={{whiteSpace:"pre-line"}} >
+                                    <Text className="text-black" style={{fontWeight:"500"}}>
                                         {this.tagColor(obj.text)}
                                     </Text>
                                 </div>
-                                {obj.type === 2 ?
-                                    <div className="reactimagecenter">
-                                        <img src={obj.medialink} className="img-fluid reactimage mr-3" />
-                                    </div> :
-                                    obj.type === 3 ?
-                                        <div className="reactionvideo">
-                                            <Player
-                                                playsInline
-                                                className="reactionvideo"
-                                                poster="/assets/poster.png"
-                                                src={obj.medialink}
-                                            >
-                                                <Shortcut clickable={true} />
-                                                <LoadingSpinner />
-                                                <VolumeMenuButton disabled />
-
-                                                <ControlBar autoHide={true} autoHideTime={true}>
-                                                </ControlBar>
-                                                <BigPlayButton position="center" />
-                                            </Player>
-                                        </div> :
-                                        obj.type === 4 ?
-                                            <div className="pt-1 pb-1 audioreaction">
-                                                <audio controls className="w-100 " src={obj.medialink} controlsList="nodownload" />
-                                            </div> : null}
                             </Col>
                         </Row>
-                        {this.props.type !== 0 ?
-                            <ReplyList obj={this.props.obj} first={this.props.first} updateReaction={this.updateReaction}
-                            /> : null}
 
                     </div>
 
-            </Skeleton>
+                </Skeleton>
+
             )
         
     }
 }
 
 
-export default Reaction; 
+export default Reply; 

@@ -14,6 +14,35 @@
 }
 
 
+.thumbnail2 {
+  width:auto;
+  height:50vh;
+  background: #000;
+}
+
+
+.reactimagecenter1 img {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  height: auto;
+  width: 100%;
+  -webkit-transform: translate(-50%,-50%);
+      -ms-transform: translate(-50%,-50%);
+          transform: translate(-50%,-50%);
+}
+
+
+.reactionvideo{
+    margin-top: 2px;
+  height: auto;
+  width:100%;
+  overflow-y: hidden;
+  border-radius: 0px 25px 25px;
+  background-color: white;
+}
+
+
 
 .textBot{
   transition: 0.5s;

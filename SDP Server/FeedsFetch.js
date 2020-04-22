@@ -48,7 +48,7 @@ router.get('/getInitReaction',(req,res)=>{
 router.get('/getChunkReactions',async (req,res)=>{
   var postid=req.query.postid;
   var skipid=req.query.resumeid;
-  ReactionsModel.find({ "postid": postid, "_id": { "$gt": skipid } }).sort([['likes', -1], ['replycount', -1]])
+  ReactionsModel.find({ "postid": postid }).sort([['likes', -1], ['replycount', -1]]).skip(parseInt(skipid))
     .limit(9)
     .exec(function (err, docs) {
       if (err) {
@@ -65,13 +65,12 @@ router.get('/getChunkReactions',async (req,res)=>{
 //get all replies
 router.get('/getInitReplies', (req, res) => {
   ReplyModel.find({ "reactionid": req.query.reactionid }).sort([['likes', -1]])
-    .limit(3)
+    .limit(4)
     .exec(function (err, docs) {
       if (err) {
         res.send(false)
       }
       else {
-        console.log(docs)
         res.send(docs)
       }
     });
@@ -82,11 +81,23 @@ router.get('/getChunkReplies', async (req, res) => {
   var reactionid = req.query.reactionid;
   var skipid = req.query.resumeid;
   console.log(reactionid,skipid)
-  ReplyModel.find({ "reactionid": reactionid, "_id": { "$gt": skipid } }).sort([['likes', -1]])
-    .limit(9)
+  ReplyModel.find({ "reactionid": reactionid }).sort([['likes', -1]]).skip(parseInt(skipid-1))
+    .limit(4)
     .exec(function (err, docs) {
       if (err) {
         console.log(err)
+        res.send(false)
+      }
+      else {
+        res.send(docs)
+      }
+    });
+})
+
+router.get('/getMyReplies',(req,res)=>{
+  ReplyModel.find({ "userid": req.query.userid,"reactionid":req.query.reactionid })
+    .exec(function (err, docs) {
+      if (err) {
         res.send(false)
       }
       else {

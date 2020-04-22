@@ -295,20 +295,6 @@ router.get('/getReactionstate',(req,res)=>{
     })
 })
 
-//Get Reply State per user
-router.get('/getReplystate', (req, res) => {
-    ReplyModel.findOne({ _id: req.query.replyid, "likesArray": req.query.userid }, (err, doc) => {
-        if (doc === null) {
-            res.send(false);
-        }
-        else {
-            res.send(true)
-        }
-    })
-})
-
-
-//Reaction Post
 router.put('/uploadReaction', attachUpload.array('file', 1),(req,res)=>{
         let link="";
         if(req.files[0]!==undefined)
@@ -320,12 +306,10 @@ router.put('/uploadReaction', attachUpload.array('file', 1),(req,res)=>{
             postid:req.body.postid,
             userid:req.body.userid,
             time:req.body.time,
-            username:req.body.username,
-            avatar: req.body.avatar,
             text: req.body.msg,
-            reply: [],
             likesArray: [],
             likes:0,
+            replycount:0,
             type:req.body.type
         });
         newReaction.save().then(doc=>{
@@ -390,8 +374,6 @@ router.post('/uploadReply',(req, res) => {
         }).then((ok) => {
             console.log("Reaction model reply")
             res.send({ stat: true, obj: doc });
-        }).catch(e => {
-            console.log(e, "error in replies No++ inside create Reply")
         })
     }, e => {
         console.log(e, "error in Creating reply ")
@@ -399,6 +381,8 @@ router.post('/uploadReply',(req, res) => {
     });
 });
 
+
+//***********************Reply**********************************************
 //Like reaction reply
 router.put('/likeReply', (req, res) => {
     ReplyModel.updateOne({ _id: req.body.replyid }, {
@@ -426,4 +410,69 @@ router.put('/dislikeReply', (req, res) => {
         res.send(true)
     })
 });
+
+//Get Reply State per user
+router.get('/getReplystate', (req, res) => {
+    ReplyModel.findOne({ _id: req.query.replyid, "likesArray": req.query.userid }, (err, doc) => {
+        if (doc === null) {
+            res.send(false);
+        }
+        else {
+            res.send(true)
+        }
+    })
+})
+
+
+//************************delete reaction or reply******************/
+//del reply
+router.get('/delReply',(req,res)=>{
+        ReplyModel.deleteOne({ _id: req.query.id }, function (err, result) {
+            if (err) {
+                res.send(false);
+                console.log(e, "Error inside Reply delete ")
+            } else {
+                console.log(result,"reply deleted")
+                ReactionsModel.updateOne({ _id: req.query.reactionid }, {
+                    $inc: { "replycount": -1 }
+                }).then(data => {
+                    console.log(data,"Reply count minus")
+                    res.send(true);
+                }).catch(e=>{
+                    res.send(false);
+                    console.log(e,"Error inside Reply delete number post model")
+                })
+            }
+        })
+})
+
+//del reaction
+router.get('/delReaction', (req, res) => {
+    ReactionsModel.deleteOne({ _id: req.query.id }, function (err, result) {
+        if (err) {
+            res.send(false);
+            console.log(e, "Error inside Reaction delete ")
+        } else {
+            PostModel.findOne({ _id: req.query.postid }, (err, docs) => {
+                docs.reactionNo = docs.reactionNo - 1;
+                docs.save();
+            }).then((ok) => {
+                ReplyModel.deleteMany({ reactionid: req.query.id }, function (err, data) {
+                    if (err) {
+                        console.log(e, "Error inside deltet all replis ")
+                        res.send(true);
+                    } else {
+                        res.send(true);
+                    }
+                }).catch(e => {
+                    console.log(e, "Error inside deltet all replis ")
+                    res.send(true);
+                })
+            }).catch(e => {
+                res.send(false)
+                console.log(e, "Error inside Reply delete number post model")
+            })
+        }
+    })
+})
 module.exports = router;

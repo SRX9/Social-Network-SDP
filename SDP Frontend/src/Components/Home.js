@@ -14,17 +14,6 @@ import { IoIosArrowForward, IoIosArrowBack } from "react-icons/io";
 import CreateReaction from './Post/CreateReaction';
 
 
-const params = {
-    slidesPerView: 1,
-    spaceBetween: 10,
-    centered: true,
-    keyboard: true,
-    pagination: {
-        type: 'fraction',
-        clickable: true
-    },
-
-}
 //1 text
 //2 photo
 //3 video
@@ -51,13 +40,11 @@ class Home extends React.Component
 
     componentDidMount()
     {
-        this.setState({params:params})
         this.loadPosts();
     }
 
 
     loadPosts=()=>{
-        console.log("Hello", this.state.userObj, localStorage.getItem("!@#$"))
         axios.get(`${serverUrl}feeds/userfeeds?userid=${localStorage.getItem('$#@!')}`).then((res) => {
             let ids = res.data.postsid.reverse();
             for (let i = 0; i < ids.length; i++) {
@@ -70,27 +57,6 @@ class Home extends React.Component
         })
     }
 
-    updateSwiper=(swiper)=>{
-        this.setState({swiper});
-        
-    }
-
-    slide=(type,swiper)=>{
-        if(type===2)
-        {
-            if (swiper !== null) {
-                swiper.slideNext();
-                window.scrollTo(0, 0)
-            }
-        }
-        else if(type===1){
-            if (swiper !== null) {
-                swiper.slidePrev();
-                window.scrollTo(0, 0)
-
-            }
-        }
-    }
 
     openreaction=(id)=>{
         this.setState({postid:id},()=>{
@@ -135,35 +101,21 @@ class Home extends React.Component
                                 <Col xxl={12} xl={12} lg={12} md={16} sm={24} className="pb-5  nich">
                                     <div
                                         style={{
-                                            fontSize: "180%",
+                                            fontSize: "160%",
                                             fontWeight: "600",
                                         }}
-                                        className="text-dark d-inline-block shadow-4 name  overflow-hidden text-break fixed-top ayefan"
+                                        className="text-dark p-1 bg-white shadow-4 pronav fixed-top ayefan"
                                     >
                                         ayefan
                                     </div>
 
                                     <div className="mt-5 pt-1 ">
                                             {this.state.postfeeds.map((obj,i) => {
-                                            if (obj.type === 1) {
-                                                return <div key={i}>
-                                                    <Texty obj={obj} openreaction={this.openreaction} />
+                                                return obj._id===undefined?null:<div key={i}>
+                                                    <Texty obj={obj} CreateReaction={this.openreaction} openreaction={this.openreaction} />
                                                     </div>
                                             }
-                                            else if (obj.type === 2) {
-                                                return <div key={i}>
-                                                    <PhotoPost obj={obj} openreaction={this.openreaction}/>
-                                                    </div>
-                                            }
-                                            else if (obj.type === 3) {
-                                                return <div key={i}><VideoPost obj={obj} openreaction={this.openreaction} />
-                                                    </div>
-                                            }
-                                            else if (obj.type === 4) {
-                                                return <div key={i}><AudioPost obj={obj} openreaction={this.openreaction}/>
-                                                    </div>
-                                            }
-                                            })}
+                                            )}
                                     </div>
                                 </Col>
                                 <Col xxl={6} xl={6} lg={6} md={4} sm={0} className="">
