@@ -19,17 +19,6 @@ class Dashboard extends React.Component
         return (
           <div className="text-center  pb-5">
             <Row type="flex" justify="center">
-              <Col
-                style={{ height: "600px" }}
-                className="m-2 text-left pr-5 bor  p-3 border"
-                span={6}
-              >
-                <h5>Updates</h5>
-                <p style={{ fontSize: "1rem", fontWeight: "500" }}>
-                  Building businesses and talent in entertainment Universal
-                  Music Group Exec 🎵 LA ☀️
-                </p>
-              </Col>
               <Col span={8}>
                 <Row>
                   <Col
@@ -49,31 +38,12 @@ class Dashboard extends React.Component
                     className="m-2 p-3 text-center bor border"
                     xs={24}
                   >
-                    <Row gutter={16} >
-                      <Col xs={6}>
-                        <Statistic  title={<h6 className="gry">Fanned-In</h6>} value={this.props.obj.fanins} />
+                    <Row >
+                      <Col span={12} className="w-100" >
+                        <Statistic className="text-center" title={'Fanned-In'} value={this.props.obj.fanins} />
                       </Col>
-                      <Col xs={6}>
-                        <Statistic title={<h6 className="gry">Stans</h6>} value={this.props.obj.stalker}  />
-                      </Col> 
-                      <Col xs={6}>
-                        <Statistic title={<h6 className="gry">Searched</h6>} value={this.props.obj.search} prefix={<Icon type="search" />} />
-                      </Col>
-                      <Col xs={6}>
-                        <Statistic title={<h6 className="gry">Monthly Streams </h6>} value={this.props.obj.monstreams}  />
-                      </Col>
-                    </Row>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col
-                    className="m-2 p-3 text-left bor border"
-                    xs={24}
-                  >
-                    <h6>Groups</h6>
-                    <Row gutter={16}>
-                      <Col span={6}>
-                        
+                      <Col span={12} className="w-100">
+                        <Statistic className="text-center" title={'Searched'} value={this.props.obj.search} prefix={<Icon type="search" />} />
                       </Col>
                     </Row>
                   </Col>

@@ -200,7 +200,7 @@ class App extends React.Component {
                   </Link>
                 </Col>
               ) : null}
-              <Col >
+              {/*<Col >
               <Link to="/postspalace">
                   <Icon
                     onClick={() => this.changeColor(3)}
@@ -213,7 +213,7 @@ class App extends React.Component {
                     }}
                   />{" "}
               </Link>
-              </Col>
+              </Col>*/}
 
               {this.state.loggedIn?
                 <Col >

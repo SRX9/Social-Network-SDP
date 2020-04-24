@@ -218,13 +218,13 @@ class Profile extends React.Component
                   <Row align="center">
                     <div className="">
                       <Row className="">
-                        <Col flex="auto" className="bg-transparent" span={9}>
+                        <Col flex="auto" className="bg-transparent text-left pl-2" span={9}>
                           <Button
                             shape="circle"
                             size="default"
                             type="default"
                             onClick={() => this.setState({ covervideo: true })}
-                            className="m-3  d-inline  shadow-1"
+                            className="mt-2 mr-3 d-inline    btn"
                             style={{ border: "5px solid white" }}
                           >
                             <Icon type="video-camera" />
@@ -235,7 +235,7 @@ class Profile extends React.Component
                               type="primary"
                               size="default"
                               onClick={() => this.setState({ coverchange: true })}
-                              className="mt-3 mb-3 mr-3  d-inline  shadow-1"
+                              className="mt-2 mr-3 d-inline    btn"
                             >
                               <Icon type="edit"  /> Change Cover
                           </Button>
@@ -245,12 +245,12 @@ class Profile extends React.Component
                         <Col flex="auto" className="text-center">
                               <div
                                 style={{
-                                  fontSize: "160%",
+                                  fontSize: "20px",
                                   fontWeight: "600",
                                 }}
                                 className="text-dark p-1 shadow-4 pronav fixed-top ayefan"
                               >
-                                {this.state.userObj.username}
+                                ayefan
                               </div>
                         </Col>
                         <Col flex="auto" className="bg-transparent float-right text-right" span={9} >
@@ -259,9 +259,9 @@ class Profile extends React.Component
                               <Button
                                 shape="round"
                                 size="default"
-                                type="default"
+                                type="danger"
                                 onClick={this.logout}
-                                className="mt-2 mr-3 d-inline  float-right  btn"
+                                className="mt-2 mr-2 d-inline  float-right  btn"
                               >
                                 Logout
                           </Button>
@@ -313,24 +313,14 @@ class Profile extends React.Component
                         </div> : 
                         <div>
                             <div
-                              className="cur pb-1 text-center"
+                              className="cur pt-3  text-center"
                               style={{
                                 fontSize: "230%",
                                 fontWeight: "500",
                                 paddingTop: "px"
                               }}
                             >
-                              {this.state.userObj.fans}
-                            </div>
-                            <div className="text-center">
-                              <Button type="primary"
-                                className="pl-5 pr-5"
-                                shape="round"
-                                style={{ fontSize: "110%", fontWeight: "400" }}
-                              >
-                                {" "}
-                                fans
-                              </Button>
+                              {this.state.userObj.fans} fans
                             </div>
                           </div>}
                         {this.state.userObj._id!==localStorage.getItem('$#@!')?
@@ -382,12 +372,12 @@ class Profile extends React.Component
                     <TabPane tab="Posts" key="2">
                       <Posts  userid={this.state.userObj.username} />
                     </TabPane>
-                    <TabPane tab="Inbox" key="3">
+                    {/*<TabPane tab="Inbox" key="3">
                       <Inbox obj={this.state.userObj} />
                     </TabPane>
                     <TabPane tab="Story" key="4">
                       <Story story={this.state.userObj.story} />
-                    </TabPane>
+                      </TabPane>*/}
                   </Tabs>
                 </div>
                 <Drawer
@@ -418,4 +408,4 @@ class Profile extends React.Component
     }
 }
 
-export default Profile;
+export default Profile; 

@@ -47,7 +47,7 @@ setTimeout(()=>{
   fuse = new Fuse(usersBuffer, options);
   //console.log(usersBuffer)
 },1500)
-let stagsBuffer = [{
+let stagsBuffer = [{  
   by: "raj",
   name:"lola",
   avatar:
@@ -103,5 +103,16 @@ router.get('/finduser',(req,res)=>{
   res.send(fuse.search(req.query.token).slice(0,20))
 })
 
-
+//inc serach
+router.get('/incSearch',(req,res)=>{
+  console.log(req.query.userid)
+  UserModel.findOne({_id:req.query.userid},(err,docs)=>{
+    docs.search=docs.search+1
+    docs.save();
+    res.send(true);
+  },e=>{
+    console.log(e,"Error in search increase");
+    res.send(true)
+  })
+})
 module.exports = router;

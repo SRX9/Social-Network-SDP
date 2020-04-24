@@ -83,7 +83,7 @@ class OverPost extends React.Component
                     <h6 className="text-white">
                       {this.numberToWord(this.props.obj.streams)}
                     </h6>
-                    <p style={{ fontSize: "1rem" }}>Streams</p>
+                    <p style={{ fontSize: "1rem" }}>Stans</p>
                   </div>
                   <div className="d-inline-block text-center">
                     <h6 className="text-white">
@@ -99,7 +99,7 @@ class OverPost extends React.Component
         {
             return (
               <div className="thumbnail cur con  border faded">
-                <img src={server+""+this.props.obj.photosLink[0]} 
+                <img src={this.props.obj.photosLink[0]} 
                 className="faded" alt="Image" />
                 <div
                   class="text-block glass p-2 pr-3"
@@ -109,7 +109,7 @@ class OverPost extends React.Component
                     <h6 className="text-white">
                       {this.numberToWord(this.props.obj.streams)}
                     </h6>
-                    <p style={{ fontSize: "1rem" }}>Streams</p>
+                    <p style={{ fontSize: "1rem" }}>Stans</p>
                   </div>
                   <div className="d-inline-block ">
                     <h6 className="text-white">
@@ -127,7 +127,7 @@ class OverPost extends React.Component
                 <video
                   height="350px"
                   width="auto"
-                  src={`http://localhost:3001/${this.props.obj.videoLink}#t=4`}
+                  src={this.props.obj.videoLink}
                 />
                 <div className="text-blockt">
                   <MdSlowMotionVideo style={{ fontSize: "50px" }} />
@@ -140,7 +140,7 @@ class OverPost extends React.Component
                     <h6 className="text-white">
                       {this.numberToWord(this.props.obj.streams)}
                     </h6>
-                    <p style={{ fontSize: "1rem" }}>Streams</p>
+                    <p style={{ fontSize: "1rem" }}>Stans</p>
                   </div>
                   <div className="d-inline-block ">
                     <h6 className="text-white">
@@ -159,7 +159,7 @@ class OverPost extends React.Component
                   height: "25vh",
                   width: "25vh",
                   border: "10px solid white"
-                }} src={server + "" + this.props.obj.coverLink} />
+                }} src={ this.props.obj.coverLink} />
                 <div className="text-blockt">
                   <MdAudiotrack
                     className="iconshad text-black-50"
@@ -174,7 +174,7 @@ class OverPost extends React.Component
                     <h6 className="text-white">
                       {this.numberToWord(this.props.obj.streams)}
                     </h6>
-                    <p style={{ fontSize: "1rem" }}>Streams</p>
+                    <p style={{ fontSize: "1rem" }}>Stans</p>
                   </div>
                   <div className="d-inline-block ">
                     <h6 className="text-white">

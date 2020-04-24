@@ -433,6 +433,23 @@ export default class Texty extends React.Component {
         }, 500)
     }
 
+    play=()=>{
+        let vid=document.getElementById(this.state.post._id)
+        if(vid!==null && localStorage.getItem("hmmmmmmm")===null)
+        {
+            vid.play();
+            localStorage.setItem("hmmmmmmm",true)
+        }
+    }
+    pause=()=>{
+        let vid = document.getElementById(this.state.post._id)
+        if(vid!==null)
+        {
+            vid.pause();
+            localStorage.removeItem("hmmmmmmm")
+        }
+    }
+
     render() {
 
         const post = this.state.post;
@@ -559,18 +576,21 @@ export default class Texty extends React.Component {
                                     </Swiper>}
                             </Col>
                             : this.props.obj.type === 3 ?
-                                <Col xs={24} className="text-left pl-3 pt-2  pr-3" style={{ marginTop: "-10px" }}>
-                                    <InView threshold={0.9}>
+                                <Col xs={24} className="text-center pl-3 pt-2  pr-3" style={{ marginTop: "-10px" }}>
+                                    <InView threshold={1}>
                                         {({ inView, ref, entry }) => {
                                             //console.log(inView, post.text.slice(0, 10))
+                                            if(inView)
+                                            {
+                                                this.play();
+                                            }
+                                            else{
+                                                this.pause();
+                                            }
                                             return <div ref={ref}>
-                                                    {inView?
-                                                    < video ref="vid" autoPlay style={{ width: "100%", height: "auto" }}
+                                                    <video id={post._id} autoPlay style={{width:"auto",maxHeight:"77vh", 
+                                                    maxWidth: "100%", height: "auto" }}
                                                         src={post.videoLink} controls controlsList="nodownload" /> 
-                                                    :
-                                                    < video   style={{ width: "100%", height: "auto" }}
-                                                        src={+"asd"+post.videoLink} controls controlsList="nodownload" /> 
-                                                    }
                                             </div>
                                             }}
                                     </InView>
