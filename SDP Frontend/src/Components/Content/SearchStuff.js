@@ -47,10 +47,10 @@ class SearchStuff extends React.Component {
                             <TabPane tab="Profiles" key="1" className="overflow-scroll">
                                 <ForUser/>
                             </TabPane>
-                            <TabPane tab="Groups" key="2" className="overflow-scroll">
+                            {/*<TabPane tab="Groups" key="2" className="overflow-scroll">
                                 <ForGroup/>
                             </TabPane>
-                            {/*<TabPane tab="Tags" key="3" className="overflow-scroll">
+                            <TabPane tab="Tags" key="3" className="overflow-scroll">
                                 <ForTag/>
                         </TabPane>*/}
                         </Tabs>
