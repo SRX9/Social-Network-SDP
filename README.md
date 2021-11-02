@@ -1,6 +1,7 @@
 # Ayefan - Social Media
 
 • It’s a Social media Webapp to connect with people, Create and Share Content in form of Text, Audio, Video, and Photos and User Communication.
+
 • Some key Features include Creating multimedia Posts, Like, Share, Save, Comment and Reply on them, follow users, personalized feed,
 Communication system, User Search, User Profile and Trending Page.
 
