@@ -22,10 +22,17 @@ Some Snapshots of the Application:
 
 Tech Stack:
 • JavaScript
+
 • React.js
+
 • Node.js
+
 • Express.js
+
 • AWS
+
 • SQL Server
+
 • MongoDB
+
 • Bootstrap
