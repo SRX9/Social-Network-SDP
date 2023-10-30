@@ -12,7 +12,6 @@ Some Snapshots of the Application:
 <img src = "https://lh3.googleusercontent.com/d/1Ups6jHxIiM6kceqW6TVl-K6f-Xb-PMOo" width = 100%>
 <img src = "https://lh3.googleusercontent.com/d/1HIUyGP-Tzx6-PVOEkBe8eBVAbSTCGIDR" width = 100%>
 <img src = "https://lh3.googleusercontent.com/d/1sx5Ygde49MeA5nih7FxJ7E-aO_V-s3hv" width = 100%>
-<img src = "https://lh3.googleusercontent.com/d/1UNDsnK4A-R20R4CAbzMdwB0BKzebPO6x" width = 100%>
 <img src = "https://lh3.googleusercontent.com/d/17RZeJuf_iPr2kMna9f2NWXGK_rRlb_S0" width = 100%>
 <img src = "https://lh3.googleusercontent.com/d/1YPBAnIth5G8D3EWYs169tGF35oGEZIqA" width = 100%>
 <img src = "https://lh3.googleusercontent.com/d/1iHk5-hTHai6yoWMJZivVRFJHgmtDObKK" width = 100%>
